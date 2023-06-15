@@ -21,7 +21,7 @@ class Utbetalingsgenerator {
         forrigeAndeler: List<AndelData>?,
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ): BeregnetUtbetalingsoppdrag {
-        validerAndeler(forrigeAndeler, nyeAndeler)
+        validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler)
         val nyeKjeder = nyeAndeler.groupByIdentOgType()
         val forrigeKjeder = (forrigeAndeler ?: emptyList()).groupByIdentOgType()
 
