@@ -41,10 +41,6 @@ class Utbetalingsgenerator {
         behandlingsinformasjon: Behandlingsinformasjon,
         forrigeAndeler: List<AndelData>?,
     ): BeregnetUtbetalingsoppdrag {
-        /*
-        TODO validering av endretSimuleringsdato, burde ikke kunne være etter min fom på nye andeler
-        TODO erSimulering
-         */
         val nyeKjeder = lagNyeKjeder(nyeKjeder, forrigeKjeder, sisteAndelPerKjede, behandlingsinformasjon)
 
         val utbetalingsoppdrag = Utbetalingsoppdrag(
@@ -76,7 +72,6 @@ class Utbetalingsgenerator {
             val sisteAndel = sisteAndelPerKjede[identOgType]
             val opphørsdato = finnOpphørsdato(forrigeAndeler, nyeAndeler, behandlingsinformasjon)
 
-            // TODO må nog sende med endretMigreringsDato/erSimulering? her og (eller opphørsdato?)
             val nyKjede = beregnNyKjede(
                 forrigeAndeler.uten0beløp(),
                 nyeAndeler.uten0beløp(),
@@ -90,27 +85,19 @@ class Utbetalingsgenerator {
     }
 
     /**
-     * Må håndtere det at man simulererer / endrer migreringsdato / første andel begynner med 0-beløp
-     * Hva skjer når det er kombinasjon av disse?
-     * Hvordan håndterer man eks migrering av
+     * Har tidligere valideret at opphørFra er <= andeler sitt fom
+     * opphørFom opphører alle perioder, og kanskje lengre bak i tiden
      */
     private fun finnOpphørsdato(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
         behandlingsinformasjon: Behandlingsinformasjon,
-    ): YearMonth? {
-        // TODO erSImulering / endretMigreringsdato
-        val førsteTidspunkVedSimulering = if (behandlingsinformasjon.erSimulering) {
-            listOfNotNull(forrigeAndeler.firstOrNull(), nyeAndeler.firstOrNull()).minOfOrNull { it.fom }
-        } else {
-            null
-        }
-        val endretMigreringsDato =
-            behandlingsinformasjon.opphørFra // kjedeEtterFørsteEndring.last() to (endretMigreringsDato ?: kjedeEtterFørsteEndring.first().stønadFom)
-        val opphørsdatoPga0Beløp = finnOpphørsdatoPga0Beløp(forrigeAndeler, nyeAndeler)
-        return listOfNotNull(opphørsdatoPga0Beløp, endretMigreringsDato, førsteTidspunkVedSimulering).minOrNull()
-    }
+    ): YearMonth? = behandlingsinformasjon.opphørFra ?: finnOpphørsdatoPga0Beløp(forrigeAndeler, nyeAndeler)
 
+    /**
+     * For å unngå unøvendig 0-sjekk senere, så sjekkes det for om man
+     * må opphøre alle andeler pga nye 0-andeler som har startdato før forrige første periode
+     */
     private fun finnOpphørsdatoPga0Beløp(forrigeAndeler: List<AndelData>, nyeAndeler: List<AndelData>): YearMonth? {
         val forrigeFørsteAndel = forrigeAndeler.firstOrNull()
         val nyFørsteAndel = nyeAndeler.firstOrNull()
@@ -148,52 +135,14 @@ class Utbetalingsgenerator {
     private fun kodeEndring(forrigeAndeler: List<AndelData>?) =
         if (forrigeAndeler == null) KodeEndring.NY else KodeEndring.ENDR
 
-    /**
-     * Hvis vi har et opphørsdato så
-     */
     private fun beregnNyKjede(
         forrige: List<AndelData>,
         nye: List<AndelData>,
         sisteAndel: AndelData?,
         periodeId: Long?,
-        opphørHeleKjedenFra: YearMonth?,
+        opphørsdato: YearMonth?,
     ): ResultatForKjede {
-        return if (opphørHeleKjedenFra != null) {
-            beregnNyKjedeMedOpphørsdato(forrige, nye, periodeId, sisteAndel, opphørHeleKjedenFra)
-        } else {
-            beregnNyKjede(forrige, nye, periodeId, sisteAndel)
-        }
-    }
-
-    private fun beregnNyKjedeMedOpphørsdato(
-        forrige: List<AndelData>,
-        nye: List<AndelData>,
-        periodeId: Long?,
-        sisteAndel: AndelData?,
-        opphørsdato: YearMonth,
-    ): ResultatForKjede {
-        val (nyeAndelerMedPeriodeId, gjeldendePeriodeId) = nyeAndelerMedPeriodeId(nye, periodeId, sisteAndel)
-        val opphørsandel = sisteAndel?.let {
-            forrige.firstOrNull()?.let {
-                // if (opphørsdato > it.fom) error("Opphørsdato=$opphørsdato må være før første andelen sitt fom=${it.fom}")
-            }
-            Pair(it, opphørsdato)
-        }
-        return ResultatForKjede(
-            beståendeAndeler = emptyList(),
-            nyeAndeler = nyeAndelerMedPeriodeId,
-            opphørsandel = opphørsandel,
-            sistePeriodeId = gjeldendePeriodeId,
-        )
-    }
-
-    private fun beregnNyKjede(
-        forrige: List<AndelData>,
-        nye: List<AndelData>,
-        periodeId: Long?,
-        sisteAndel: AndelData?,
-    ): ResultatForKjede {
-        val beståendeAndeler = finnBeståendeAndeler(forrige, nye)
+        val beståendeAndeler = opphørsdato?.let { BeståendeAndeler(emptyList(), it) } ?: finnBeståendeAndeler(forrige, nye)
         val nyeAndeler = nye.subList(beståendeAndeler.andeler.size, nye.size)
 
         val (nyeAndelerMedPeriodeId, gjeldendePeriodeId) = nyeAndelerMedPeriodeId(nyeAndeler, periodeId, sisteAndel)
