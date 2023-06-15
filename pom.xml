@@ -11,16 +11,21 @@
     <description>Utbetalingsgenerator</description>
 
     <properties>
-        <java.version>17</java.version>
-        <kotlin.version>1.8.22</kotlin.version>
         <revision>1</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <java.version>17</java.version>
+        <kotlin.version>1.8.22</kotlin.version>
+
+        <felles-kontrakter.version>3.0_20230605154245_3d182db</felles-kontrakter.version>
+
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
+        <assertj.version>3.23.1</assertj.version>
         <cucumber.version>7.12.1</cucumber.version>
         <mockk.version>1.13.5</mockk.version>
         <junit-platform-suite.version>1.9.2</junit-platform-suite.version>
-
     </properties>
 
     <dependencyManagement>
@@ -48,7 +53,17 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.familie.kontrakter</groupId>
+            <artifactId>felles</artifactId>
+            <version>${felles-kontrakter.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -58,6 +73,13 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -154,11 +176,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
@@ -220,6 +237,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/navikt/familie-kontrakter</url>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>
