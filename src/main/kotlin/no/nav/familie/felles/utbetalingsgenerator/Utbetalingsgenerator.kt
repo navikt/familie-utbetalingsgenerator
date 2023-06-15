@@ -65,7 +65,7 @@ class Utbetalingsgenerator {
         behandlingsinformasjon: Behandlingsinformasjon,
     ): List<ResultatForKjede> {
         val alleIdentOgTyper = nyeKjeder.keys + forrigeKjeder.keys
-        var sistePeriodeId = sisteAndelPerKjede.values.mapNotNull { it.periodeId }.maxOrNull()
+        var sistePeriodeId = sisteAndelPerKjede.values.mapNotNull { it.periodeId }.maxOrNull() ?: -1
         return alleIdentOgTyper.map { identOgType ->
             val forrigeAndeler = forrigeKjeder[identOgType] ?: emptyList()
             val nyeAndeler = nyeKjeder[identOgType] ?: emptyList()
@@ -139,17 +139,13 @@ class Utbetalingsgenerator {
         forrige: List<AndelData>,
         nye: List<AndelData>,
         sisteAndel: AndelData?,
-        periodeId: Long?,
+        periodeId: Long,
         opphørsdato: YearMonth?,
     ): ResultatForKjede {
         val beståendeAndeler = opphørsdato?.let { BeståendeAndeler(emptyList(), it) } ?: finnBeståendeAndeler(forrige, nye)
         val nyeAndeler = nye.subList(beståendeAndeler.andeler.size, nye.size)
 
         val (nyeAndelerMedPeriodeId, gjeldendePeriodeId) = nyeAndelerMedPeriodeId(nyeAndeler, periodeId, sisteAndel)
-        // TODO på en eller annen måte verifisere at periodeId har blitt satt?
-        if (gjeldendePeriodeId < 0) {
-            // gjeldendePeriodeId =
-        }
         return ResultatForKjede(
             beståendeAndeler = beståendeAndeler.andeler,
             nyeAndeler = nyeAndelerMedPeriodeId,
@@ -162,10 +158,10 @@ class Utbetalingsgenerator {
 
     private fun nyeAndelerMedPeriodeId(
         nyeAndeler: List<AndelData>,
-        periodeId: Long?,
+        periodeId: Long,
         sisteAndel: AndelData?,
     ): Pair<List<AndelData>, Long> {
-        var gjeldendePeriodeId = periodeId ?: -1
+        var gjeldendePeriodeId = periodeId
         var forrigePeriodeId = sisteAndel?.periodeId
         val nyeAndelerMedPeriodeId = nyeAndeler.mapIndexed { index, andelData ->
             gjeldendePeriodeId += 1

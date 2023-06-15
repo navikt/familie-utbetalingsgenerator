@@ -15,7 +15,6 @@ internal data class BeståendeAndeler(
 
 internal object BeståendeAndelerBeregner {
 
-    // TODO på en eller annen måte så skal de som beholdes ha riktig ID, men få oppdatert offset/forrigeOffset/kildeBehandlingId fra forrige beandling
     fun finnBeståendeAndeler(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
@@ -33,17 +32,11 @@ internal object BeståendeAndelerBeregner {
         val beståendeAndeler = index?.let {
             val opphørsdato = finnBeståendeAndelOgOpphør(it, forrige, nyeAndeler)
             when (opphørsdato) {
-                is Opphørsdato -> {
-                    BeståendeAndeler(forrige.subList(0, index), opphørsdato.opphør)
-                }
-
+                is Opphørsdato -> BeståendeAndeler(forrige.subList(0, index), opphørsdato.opphør)
+                is NyAndelSkriverOver -> BeståendeAndeler(forrige.subList(0, maxOf(0, index)))
                 is AvkortAndel -> {
                     val avkortetAndeler = forrige.subList(0, maxOf(0, index))
                     BeståendeAndeler(avkortetAndeler + opphørsdato.andel, opphørsdato.opphør)
-                }
-
-                is NyAndelSkriverOver -> {
-                    BeståendeAndeler(forrige.subList(0, maxOf(0, index)))
                 }
             }
         } ?: BeståendeAndeler(forrige, null)
