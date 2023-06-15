@@ -16,8 +16,13 @@ import java.time.YearMonth
 class Utbetalingsgenerator {
 
     /**
+     * Generer utbetalingsoppdrag som sendes til oppdrag
+     *
      * @param sisteAndelPerKjede må sende inn siste andelen per kjede for å peke/opphøre riktig forrige andel
      * [sisteAndelPerKjede] brukes også for å utlede om utbetalingsoppdraget settes til NY eller ENDR
+     *
+     * @return [BeregnetUtbetalingsoppdrag] som inneholder både utbetalingsoppdraget og [BeregnetUtbetalingsoppdrag.andeler]
+     * som inneholder periodeId/forrigePeriodeId for å kunne oppdatere andeler i basen
      */
     fun lagUtbetalingsoppdrag(
         behandlingsinformasjon: Behandlingsinformasjon,
@@ -56,7 +61,7 @@ class Utbetalingsgenerator {
 
         return BeregnetUtbetalingsoppdrag(
             utbetalingsoppdrag,
-            andelerMedPeriodeId(behandlingsinformasjon, nyeKjeder),
+            lagAndelerMedPeriodeId(behandlingsinformasjon, nyeKjeder),
         )
     }
 
@@ -121,7 +126,7 @@ class Utbetalingsgenerator {
         return opphørsperioder + nyePerioder
     }
 
-    private fun andelerMedPeriodeId(
+    private fun lagAndelerMedPeriodeId(
         behandlingsinformasjon: Behandlingsinformasjon,
         nyeKjeder: List<ResultatForKjede>,
     ): List<AndelMedPeriodeId> = nyeKjeder.flatMap { nyKjede ->
