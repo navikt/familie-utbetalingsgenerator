@@ -1,7 +1,5 @@
 package no.nav.familie.felles.utbetalingsgenerator
 
-import no.nav.familie.felles.utbetalingsgenerator.DatoUtil.førsteDagIInneværendeMåned
-import no.nav.familie.felles.utbetalingsgenerator.DatoUtil.sisteDagIInneværendeMåned
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.kontrakter.felles.oppdrag.Opphør
@@ -57,4 +55,7 @@ internal data class UtbetalingsperiodeMal(
             utbetalesTil = behandlingsinformasjon.utbetalesTil ?: behandlingsinformasjon.personIdent,
             behandlingId = behandlingsinformasjon.behandlingId,
         )
+
+    private fun YearMonth.førsteDagIInneværendeMåned() = this.atDay(1)
+    private fun YearMonth.sisteDagIInneværendeMåned() = this.atEndOfMonth()
 }
