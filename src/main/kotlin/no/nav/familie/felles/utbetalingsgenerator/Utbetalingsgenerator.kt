@@ -31,11 +31,11 @@ class Utbetalingsgenerator {
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ): BeregnetUtbetalingsoppdrag {
         validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler)
-        val nyeAndeler = nyeAndeler.groupByIdentOgType()
+        val nyeAndelerGruppert = nyeAndeler.groupByIdentOgType()
         val forrigeKjeder = forrigeAndeler.groupByIdentOgType()
 
         return lagUtbetalingsoppdrag(
-            nyeAndeler = nyeAndeler,
+            nyeAndeler = nyeAndelerGruppert,
             forrigeKjeder = forrigeKjeder,
             sisteAndelPerKjede = sisteAndelPerKjede,
             behandlingsinformasjon = behandlingsinformasjon,
