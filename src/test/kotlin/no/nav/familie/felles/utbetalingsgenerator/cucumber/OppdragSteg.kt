@@ -22,6 +22,7 @@ import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
 import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.YearMonth
@@ -63,6 +64,20 @@ class OppdragSteg {
             } catch (e: Throwable) {
                 logger.error("Feilet beregning av oppdrag for behandling=$behandlingId")
                 throw e
+            }
+        }
+    }
+
+    @Når("beregner utbetalingsoppdrag kjøres kastes exception")
+    fun `lagTilkjentYtelseMedUtbetalingsoppdrag kjøres kastes exception`(dataTable: DataTable) {
+        val throwable = catchThrowable { `beregner utbetalingsoppdrag`() }
+        dataTable.asMaps().let { rader ->
+            if (rader.size > 1) {
+                error("Kan maks inneholde en rad")
+            }
+            rader.firstOrNull()?.let { rad ->
+                rad["Exception"]?.let { assertThat(throwable::class.java.simpleName).isEqualTo(it) }
+                rad["Melding"]?.let { assertThat(throwable.message).contains(it) }
             }
         }
     }
