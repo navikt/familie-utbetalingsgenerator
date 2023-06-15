@@ -31,11 +31,11 @@ class Utbetalingsgenerator {
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ): BeregnetUtbetalingsoppdrag {
         validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler)
-        val nyeKjeder = nyeAndeler.groupByIdentOgType()
+        val nyeAndeler = nyeAndeler.groupByIdentOgType()
         val forrigeKjeder = forrigeAndeler.groupByIdentOgType()
 
         return lagUtbetalingsoppdrag(
-            nyeKjeder = nyeKjeder,
+            nyeAndeler = nyeAndeler,
             forrigeKjeder = forrigeKjeder,
             sisteAndelPerKjede = sisteAndelPerKjede,
             behandlingsinformasjon = behandlingsinformasjon,
@@ -43,12 +43,12 @@ class Utbetalingsgenerator {
     }
 
     private fun lagUtbetalingsoppdrag(
-        nyeKjeder: Map<IdentOgType, List<AndelData>>,
+        nyeAndeler: Map<IdentOgType, List<AndelData>>,
         forrigeKjeder: Map<IdentOgType, List<AndelData>>,
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
         behandlingsinformasjon: Behandlingsinformasjon,
     ): BeregnetUtbetalingsoppdrag {
-        val nyeKjeder = lagNyeKjeder(nyeKjeder, forrigeKjeder, sisteAndelPerKjede, behandlingsinformasjon)
+        val nyeKjeder = lagNyeKjeder(nyeAndeler, forrigeKjeder, sisteAndelPerKjede, behandlingsinformasjon)
 
         val utbetalingsoppdrag = Utbetalingsoppdrag(
             saksbehandlerId = behandlingsinformasjon.saksbehandlerId,
