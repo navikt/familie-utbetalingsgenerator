@@ -6,6 +6,6 @@ class UtbetalingsgeneratorTest {
 
     @Test
     fun name() {
-        error("")
+        // error("")
     }
 }

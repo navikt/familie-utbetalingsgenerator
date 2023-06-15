@@ -2,7 +2,7 @@ name: Build-Deploy
 on:
   push:
     branches-ignore:
-      - 'master'
+      - 'main'
 
 jobs:
   build-and-deploy-artifact:
@@ -20,4 +20,4 @@ jobs:
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn --no-transfer-progress package
+        run: mvn -B --no-transfer-progress package

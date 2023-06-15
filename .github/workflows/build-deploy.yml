@@ -2,7 +2,7 @@ name: Build-Deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-deploy-artifact:
@@ -24,11 +24,7 @@ jobs:
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn package dependency:resolve-plugins dependency:go-offline
-
-      - name: Build (and run tests)
-        if: steps.setup-java.outputs.cache-hit != 'true'
-        run: mvn clean install
+        run: mvn -B --no-transfer-progress dependency:resolve-plugins dependency:go-offline
 
       - name: Setting version
         run: |
@@ -39,8 +35,8 @@ jobs:
           mvn versions:set -DnewVersion="$VERSION"
           mvn versions:commit
 
-      - name: Deploy to Github Package
+      - name: Build and Deploy to Github Package
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn --settings .github/maven-settings.xml source:jar-no-fork deploy -DskipTests=true -Dmaven.wagon.http.pool=false
+        run: mvn -B --no-transfer-progress --settings .github/maven-settings.xml deploy -Dmaven.wagon.http.pool=false
