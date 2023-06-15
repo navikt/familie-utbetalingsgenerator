@@ -149,7 +149,7 @@ class Utbetalingsgenerator {
         periodeId: Long,
         opphørsdato: YearMonth?,
     ): ResultatForKjede {
-        val beståendeAndeler = opphørsdato?.let { BeståendeAndeler(emptyList(), it) } ?: finnBeståendeAndeler(forrige, nye)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, nye, opphørsdato)
         val nyeAndeler = nye.subList(beståendeAndeler.andeler.size, nye.size)
 
         val (nyeAndelerMedPeriodeId, gjeldendePeriodeId) = nyeAndelerMedPeriodeId(nyeAndeler, periodeId, sisteAndel)

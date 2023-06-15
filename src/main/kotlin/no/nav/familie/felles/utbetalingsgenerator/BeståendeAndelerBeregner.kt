@@ -18,30 +18,62 @@ internal object BeståendeAndelerBeregner {
     fun finnBeståendeAndeler(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
+        opphørsdato: YearMonth?,
     ): BeståendeAndeler {
-        val index = finnIndexPåFørsteDiff(forrigeAndeler, nyeAndeler)
-        // TODO for å oppdatere id på forrige sånn at bestående fortsatt har riktig id på nytt
-        val forrige = forrigeAndeler.mapIndexed { forrigeIndex, andelData ->
-            if (nyeAndeler.size > forrigeIndex) {
-                andelData.copy(id = nyeAndeler[forrigeIndex].id)
-            } else {
-                andelData
-            }
+        // Når det sendes med ett opphørsdato beholder vi ingen andeler fra forrige behandling
+        if (opphørsdato != null) {
+            return BeståendeAndeler(emptyList(), opphørsdato)
         }
 
-        val beståendeAndeler = index?.let {
-            val opphørsdato = finnBeståendeAndelOgOpphør(it, forrige, nyeAndeler)
-            when (opphørsdato) {
-                is Opphørsdato -> BeståendeAndeler(forrige.subList(0, index), opphørsdato.opphør)
-                is NyAndelSkriverOver -> BeståendeAndeler(forrige.subList(0, maxOf(0, index)))
-                is AvkortAndel -> {
-                    val avkortetAndeler = forrige.subList(0, maxOf(0, index))
-                    BeståendeAndeler(avkortetAndeler + opphørsdato.andel, opphørsdato.opphør)
-                }
-            }
-        } ?: BeståendeAndeler(forrige, null)
+        val indexPåFørsteEndring = finnIndexPåFørsteEndring(forrigeAndeler, nyeAndeler)
+        val forrigeAndelerMedOppdatertId = oppdaterBeståendeAndelerMedId(forrigeAndeler, nyeAndeler)
+        return finnBeståendeAndeler(forrigeAndelerMedOppdatertId, nyeAndeler, indexPåFørsteEndring)
+    }
 
-        return beståendeAndeler
+    private fun finnBeståendeAndeler(
+        forrigeAndeler: List<AndelData>,
+        nyeAndeler: List<AndelData>,
+        indexPåFørsteEndring: Int?,
+    ): BeståendeAndeler {
+        return if (indexPåFørsteEndring != null) {
+            finnBeståendeAndelerNårDetFinnesEndring(
+                forrigeAndeler = forrigeAndeler,
+                nyeAndeler = nyeAndeler,
+                indexPåFørsteEndring = indexPåFørsteEndring,
+            )
+        } else {
+            BeståendeAndeler(forrigeAndeler, null)
+        }
+    }
+
+    fun finnBeståendeAndelerNårDetFinnesEndring(
+        forrigeAndeler: List<AndelData>,
+        nyeAndeler: List<AndelData>,
+        indexPåFørsteEndring: Int,
+    ): BeståendeAndeler {
+        val opphørsdato = finnBeståendeAndelOgOpphør(indexPåFørsteEndring, forrigeAndeler, nyeAndeler)
+        return when (opphørsdato) {
+            is Opphørsdato -> BeståendeAndeler(forrigeAndeler.subList(0, indexPåFørsteEndring), opphørsdato.opphør)
+            is NyAndelSkriverOver -> BeståendeAndeler(forrigeAndeler.subList(0, maxOf(0, indexPåFørsteEndring)))
+            is AvkortAndel -> {
+                val avkortetAndeler = forrigeAndeler.subList(0, maxOf(0, indexPåFørsteEndring))
+                BeståendeAndeler(avkortetAndeler + opphørsdato.andel, opphørsdato.opphør)
+            }
+        }
+    }
+
+    /**
+     * Oppdaterer bestående andeler med id for då er en del av resultatet, uten å oppdatere de med periodeId/forrigePeriodeId
+     */
+    private fun oppdaterBeståendeAndelerMedId(
+        forrigeAndeler: List<AndelData>,
+        nyeAndeler: List<AndelData>,
+    ) = forrigeAndeler.mapIndexed { forrigeIndex, andelData ->
+        if (nyeAndeler.size > forrigeIndex) {
+            andelData.copy(id = nyeAndeler[forrigeIndex].id)
+        } else {
+            andelData
+        }
     }
 
     private fun finnBeståendeAndelOgOpphør(
@@ -81,7 +113,7 @@ internal object BeståendeAndelerBeregner {
         return NyAndelSkriverOver
     }
 
-    private fun finnIndexPåFørsteDiff(
+    private fun finnIndexPåFørsteEndring(
         forrige: List<AndelData>,
         nye: List<AndelData>,
     ): Int? {
