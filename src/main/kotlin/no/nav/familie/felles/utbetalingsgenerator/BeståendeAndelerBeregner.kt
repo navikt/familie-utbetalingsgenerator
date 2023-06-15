@@ -62,20 +62,6 @@ internal object BeståendeAndelerBeregner {
         }
     }
 
-    /**
-     * Oppdaterer bestående andeler med id for då er en del av resultatet, uten å oppdatere de med periodeId/forrigePeriodeId
-     */
-    private fun oppdaterBeståendeAndelerMedId(
-        forrigeAndeler: List<AndelData>,
-        nyeAndeler: List<AndelData>,
-    ) = forrigeAndeler.mapIndexed { forrigeIndex, andelData ->
-        if (nyeAndeler.size > forrigeIndex) {
-            andelData.copy(id = nyeAndeler[forrigeIndex].id)
-        } else {
-            andelData
-        }
-    }
-
     private fun finnBeståendeAndelOgOpphør(
         index: Int,
         forrigeAndeler: List<AndelData>,
@@ -111,6 +97,20 @@ internal object BeståendeAndelerBeregner {
             return AvkortAndel(forrige.copy(tom = ny.tom), opphørsdato)
         }
         return NyAndelSkriverOver
+    }
+
+    /**
+     * Oppdaterer bestående andeler med id for då er en del av resultatet, uten å oppdatere de med periodeId/forrigePeriodeId
+     */
+    private fun oppdaterBeståendeAndelerMedId(
+        forrigeAndeler: List<AndelData>,
+        nyeAndeler: List<AndelData>,
+    ) = forrigeAndeler.mapIndexed { forrigeIndex, andelData ->
+        if (nyeAndeler.size > forrigeIndex) {
+            andelData.copy(id = nyeAndeler[forrigeIndex].id)
+        } else {
+            andelData
+        }
     }
 
     private fun finnIndexPåFørsteEndring(
