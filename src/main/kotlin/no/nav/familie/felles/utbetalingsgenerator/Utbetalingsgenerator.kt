@@ -15,22 +15,25 @@ import java.time.YearMonth
 
 class Utbetalingsgenerator {
 
+    /**
+     * @param sisteAndelPerKjede må sende inn siste andelen per kjede for å peke/opphøre riktig forrige andel
+     * [sisteAndelPerKjede] brukes også for å utlede om utbetalingsoppdraget settes til NY eller ENDR
+     */
     fun lagUtbetalingsoppdrag(
         behandlingsinformasjon: Behandlingsinformasjon,
         nyeAndeler: List<AndelData>,
-        forrigeAndeler: List<AndelData>?,
+        forrigeAndeler: List<AndelData>,
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ): BeregnetUtbetalingsoppdrag {
         validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler)
         val nyeKjeder = nyeAndeler.groupByIdentOgType()
-        val forrigeKjeder = (forrigeAndeler ?: emptyList()).groupByIdentOgType()
+        val forrigeKjeder = forrigeAndeler.groupByIdentOgType()
 
         return lagUtbetalingsoppdrag(
             nyeKjeder = nyeKjeder,
             forrigeKjeder = forrigeKjeder,
             sisteAndelPerKjede = sisteAndelPerKjede,
             behandlingsinformasjon = behandlingsinformasjon,
-            forrigeAndeler = forrigeAndeler,
         )
     }
 
@@ -39,13 +42,12 @@ class Utbetalingsgenerator {
         forrigeKjeder: Map<IdentOgType, List<AndelData>>,
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
         behandlingsinformasjon: Behandlingsinformasjon,
-        forrigeAndeler: List<AndelData>?,
     ): BeregnetUtbetalingsoppdrag {
         val nyeKjeder = lagNyeKjeder(nyeKjeder, forrigeKjeder, sisteAndelPerKjede, behandlingsinformasjon)
 
         val utbetalingsoppdrag = Utbetalingsoppdrag(
             saksbehandlerId = behandlingsinformasjon.saksbehandlerId,
-            kodeEndring = kodeEndring(forrigeAndeler),
+            kodeEndring = kodeEndring(sisteAndelPerKjede),
             fagSystem = behandlingsinformasjon.fagsystem.kode,
             saksnummer = behandlingsinformasjon.fagsakId.toString(),
             aktoer = behandlingsinformasjon.personIdent,
@@ -132,8 +134,8 @@ class Utbetalingsgenerator {
     // Da de har opplevd å motta
     // UEND på oppdrag som skulle vært ENDR anbefaler de at kun ENDR brukes når sak
     // ikke er ny, så man slipper å forholde seg til om det er endring over 150-nivå eller ikke.
-    private fun kodeEndring(forrigeAndeler: List<AndelData>?) =
-        if (forrigeAndeler == null) KodeEndring.NY else KodeEndring.ENDR
+    private fun kodeEndring(sisteAndelMedPeriodeId: Map<IdentOgType, AndelData>) =
+        if (sisteAndelMedPeriodeId.isEmpty()) KodeEndring.NY else KodeEndring.ENDR
 
     private fun beregnNyKjede(
         forrige: List<AndelData>,

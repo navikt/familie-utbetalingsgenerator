@@ -23,7 +23,7 @@ object OppdragParser {
         rader: List<Map<String, String>>,
         forrigeAndelId: Long,
     ): List<AndelData> {
-        val erUtenAndeler = (parseValgfriBoolean(DomenebegrepTilkjentYtelse.UTEN_ANDELER, rader.first()) ?: false)
+        val erUtenAndeler = (parseValgfriBoolean(DomenebegrepAndeler.UTEN_ANDELER, rader.first()) ?: false)
         var andelId = forrigeAndelId
         return if (erUtenAndeler) {
             emptyList()
@@ -36,15 +36,15 @@ object OppdragParser {
         rad: Map<String, String>,
         andelId: Long,
     ): AndelData {
-        val ytelseType = parseValgfriEnum(DomenebegrepTilkjentYtelse.YTELSE_TYPE, rad) ?: YtelseType.ORDINÆR_BARNETRYGD
+        val ytelseType = parseValgfriEnum(DomenebegrepAndeler.YTELSE_TYPE, rad) ?: YtelseType.ORDINÆR_BARNETRYGD
         return AndelData(
             id = andelId,
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, rad),
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, rad),
-            beløp = parseInt(DomenebegrepTilkjentYtelse.BELØP, rad),
+            beløp = parseInt(DomenebegrepAndeler.BELØP, rad),
             personIdent = parseFødselsnummer(rad),
             type = ytelseType,
-            kildeBehandlingId = parseValgfriLong(DomenebegrepTilkjentYtelse.KILDEBEHANDLING_ID, rad),
+            kildeBehandlingId = parseValgfriLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
             periodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
             forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
         )
@@ -75,7 +75,7 @@ object OppdragParser {
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, it).atDay(1),
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, it).atEndOfMonth(),
             opphør = parseValgfriÅrMåned(DomenebegrepUtbetalingsoppdrag.OPPHØRSDATO, it)?.atDay(1),
-            kildebehandlingId = parseValgfriLong(DomenebegrepTilkjentYtelse.KILDEBEHANDLING_ID, it),
+            kildebehandlingId = parseValgfriLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, it),
         )
 
     private fun validerAlleKodeEndringerLike(rader: List<Map<String, String>>) {
@@ -87,7 +87,7 @@ object OppdragParser {
     }
 
     private fun parseFødselsnummer(rad: Map<String, String>): String {
-        val id = (parseValgfriInt(DomenebegrepTilkjentYtelse.IDENT, rad) ?: 1).toString()
+        val id = (parseValgfriInt(DomenebegrepAndeler.IDENT, rad) ?: 1).toString()
         return id.padStart(11, '0')
     }
 }
@@ -96,7 +96,7 @@ enum class DomenebegrepBehandlingsinformasjon(override val nøkkel: String) : Do
     OPPHØR_FRA("Opphør fra"),
 }
 
-enum class DomenebegrepTilkjentYtelse(override val nøkkel: String) : Domenenøkkel {
+enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {
     YTELSE_TYPE("Ytelse"),
     UTEN_ANDELER("Uten andeler"),
     BELØP("Beløp"),

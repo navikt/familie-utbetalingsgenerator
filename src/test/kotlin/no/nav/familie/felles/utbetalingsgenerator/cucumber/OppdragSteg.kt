@@ -113,7 +113,7 @@ class OppdragSteg {
         acc: List<Pair<Long, List<AndelData>>>,
         andeler: Map.Entry<Long, List<AndelData>>,
     ): BeregnetUtbetalingsoppdrag {
-        val forrigeKjeder = acc.lastOrNull()?.second
+        val forrigeKjeder = acc.lastOrNull()?.second ?: emptyList()
         val behandlingId = andeler.key
         val sisteOffsetPerIdent = gjeldendeForrigeOffsetForKjede(acc)
         return utbetalingsgenerator.lagUtbetalingsoppdrag(

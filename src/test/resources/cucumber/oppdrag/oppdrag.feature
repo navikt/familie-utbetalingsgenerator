@@ -167,3 +167,19 @@ Egenskap: Vedtak for førstegangsbehandling
       | 1            | 03.2021  | 06.2021  |             | 700   | NY           | Nei        | 0          |                    |
       | 2            | 03.2021  | 03.2021  |             | 800   | ENDR         | Nei        | 1          | 0                  |
       | 2            | 04.2021  | 06.2021  |             | 700   | ENDR         | Nei        | 2          | 1                  |
+
+  Scenario: Opphør alle perioder for å sen iverksette på nytt, verifiserer at man fortsatt sender ENDR
+
+    Gitt følgende tilkjente ytelser
+      | BehandlingId | Uten andeler | Fra dato | Til dato | Beløp |
+      | 1            |              | 03.2021  | 03.2021  | 700   |
+      | 2            | Ja           |          |          |       |
+      | 3            |              | 03.2021  | 03.2021  | 700   |
+
+    Når beregner utbetalingsoppdrag
+
+    Så forvent følgende utbetalingsoppdrag
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id |
+      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    |
+      | 2            | 03.2021  | 03.2021  | 03.2021     | 700   | ENDR         | Ja         | 0          |                    |
+      | 3            | 03.2021  | 03.2021  |             | 700   | ENDR         | Nei        | 1          | 0                  |

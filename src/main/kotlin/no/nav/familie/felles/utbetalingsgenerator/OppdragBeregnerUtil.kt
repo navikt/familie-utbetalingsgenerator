@@ -7,10 +7,10 @@ internal object OppdragBeregnerUtil {
 
     fun validerAndeler(
         behandlingsinformasjon: Behandlingsinformasjon,
-        forrige: List<AndelData>?,
+        forrige: List<AndelData>,
         nye: List<AndelData>,
     ) {
-        val forrigeUtenNullbeløp = (forrige ?: emptyList()).filter { it.beløp != 0 }
+        val forrigeUtenNullbeløp = forrige.filter { it.beløp != 0 }
         val id = forrigeUtenNullbeløp.map { it.id } + nye.map { it.id }
         if (id.size != id.toSet().size) {
             error("Inneholder duplikat av id'er")
@@ -22,7 +22,7 @@ internal object OppdragBeregnerUtil {
             ?.let { error("Ny andel=${it.id} inneholder periodeId/forrigePeriodeId") }
 
         behandlingsinformasjon.opphørFra?.let { opphørFra ->
-            forrige?.find { it.fom < opphørFra }
+            forrige.find { it.fom < opphørFra }
                 ?.let { error("Kan ikke sende inn opphørFra=$opphørFra som er etter andel=${it.id} sitt fom=${it.fom}") }
         }
     }
