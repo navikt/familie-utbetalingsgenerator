@@ -105,7 +105,6 @@ class OppdragSteg {
         fagsystem = Ytelsestype.BARNETRYGD,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),
-        erSimulering = false,
         opphørFra = opphørFra,
         utbetalesTil = null,
     )

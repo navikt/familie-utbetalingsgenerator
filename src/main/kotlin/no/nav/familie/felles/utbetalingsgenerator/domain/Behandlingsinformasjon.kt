@@ -14,7 +14,6 @@ data class Behandlingsinformasjon(
     val fagsystem: Ytelsestype,
     val personIdent: String,
     val vedtaksdato: LocalDate,
-    val erSimulering: Boolean,
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
 )
