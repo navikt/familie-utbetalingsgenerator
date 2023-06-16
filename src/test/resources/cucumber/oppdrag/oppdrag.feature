@@ -121,6 +121,12 @@ Egenskap: Vedtak for førstegangsbehandling
       | 2            | 03.2021  | 03.2021  |             | 800   | ENDR         | Nei        | 1          | 0                  |
       | 2            | 04.2021  | 06.2021  |             | 700   | ENDR         | Nei        | 2          | 1                  |
 
+    Så forvent følgende andeler med periodeId
+      | BehandlingId | Id | Periode id | Forrige periode id | Kildebehandling |
+      | 1            | 0  | 0          |                    | 1               |
+      | 2            | 1  | 1          | 0                  | 2               |
+      | 2            | 2  | 2          | 1                  | 2               |
+
   Scenario: Opphør alle perioder for å sen iverksette på nytt, verifiserer at man fortsatt sender ENDR
 
     Gitt følgende tilkjente ytelser

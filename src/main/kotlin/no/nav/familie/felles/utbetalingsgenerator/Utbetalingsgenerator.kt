@@ -19,6 +19,13 @@ class Utbetalingsgenerator {
      * Generer utbetalingsoppdrag som sendes til oppdrag
      *
      * @param sisteAndelPerKjede må sende inn siste andelen per kjede for å peke/opphøre riktig forrige andel
+     * Siste andelen er første andelen med høyeste periodeId, per ident/type, dvs hvis man har avkortet en periode,
+     * og fått et nytt tom, så skal man bruke den opprinnelige perioden for det periodeId'et
+     * ex
+     * SELECT * FROM (SELECT aty.id,
+     *        row_number() OVER (PARTITION BY aty.type, aty.fk_aktoer_id ORDER BY aty.periode_offset DESC, x.opprettet_tid ASC) rn
+     * FROM andel_tilkjent_ytelse aty) WHERE rn = 1
+     *
      * [sisteAndelPerKjede] brukes også for å utlede om utbetalingsoppdraget settes til NY eller ENDR
      *
      * @return [BeregnetUtbetalingsoppdrag] som inneholder både utbetalingsoppdraget og [BeregnetUtbetalingsoppdrag.andeler]

@@ -6,14 +6,20 @@ import io.cucumber.java.no.Når
 import io.cucumber.java.no.Så
 import no.nav.familie.felles.utbetalingsgenerator.Utbetalingsgenerator
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.ValideringUtil.assertSjekkBehandlingIder
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.Domenebegrep
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.DomenebegrepAndeler
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.DomenebegrepBehandlingsinformasjon
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.DomenebegrepUtbetalingsoppdrag
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.DomeneparserUtil.groupByBehandlingId
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.ForventetUtbetalingsoppdrag
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.ForventetUtbetalingsperiode
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser.mapAndeler
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLong
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriÅrMåned
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
+import no.nav.familie.felles.utbetalingsgenerator.domain.AndelMedPeriodeId
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdrag
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
@@ -46,8 +52,11 @@ class OppdragSteg {
     fun følgendeTilkjenteYtelser(dataTable: DataTable) {
         genererBehandlingsinformasjonForDeSomMangler(dataTable)
         andelerPerBehandlingId = mapAndeler(dataTable)
-        if (andelerPerBehandlingId.flatMap { it.value }.any { it.kildeBehandlingId != null }) {
-            error("Kildebehandling skal ikke settes på input, denne settes fra utbetalingsgeneratorn")
+        if (
+            andelerPerBehandlingId.flatMap { it.value }
+                .any { it.kildeBehandlingId != null || it.periodeId != null || it.forrigePeriodeId != null }
+        ) {
+            error("Kildebehandling/periodeId/forrigePeriodeId skal ikke settes på input, denne settes fra utbetalingsgeneratorn")
         }
     }
 
@@ -86,6 +95,25 @@ class OppdragSteg {
     fun `forvent følgende utbetalingsoppdrag`(dataTable: DataTable) {
         validerForventetUtbetalingsoppdrag(dataTable, beregnetUtbetalingsoppdrag)
         assertSjekkBehandlingIder(dataTable, beregnetUtbetalingsoppdrag)
+    }
+
+    @Så("forvent følgende andeler med periodeId")
+    fun `forvent følgende andeler med periodeId`(dataTable: DataTable) {
+        val groupByBehandlingId = dataTable.groupByBehandlingId()
+        groupByBehandlingId.forEach { (behandlingId, rader) ->
+            val beregnedeAndeler = beregnetUtbetalingsoppdrag.getValue(behandlingId).andeler
+            val forventedeAndeler = rader.map { rad ->
+                AndelMedPeriodeId(
+                    id = parseLong(Domenebegrep.ID, rad),
+                    periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
+                    forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
+                    kildeBehandlingId = parseLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
+                )
+            }
+            assertThat(beregnedeAndeler).containsExactlyElementsOf(forventedeAndeler)
+        }
+        assertThat(beregnetUtbetalingsoppdrag.values.map { it.andeler }.filter { it.isNotEmpty() })
+            .hasSize(groupByBehandlingId.size)
     }
 
     private fun opprettBehandlingsinformasjon(dataTable: DataTable) {
@@ -139,11 +167,15 @@ class OppdragSteg {
         )
     }
 
+    /**
+     * Når vi henter forrige offset for en kjede så må vi hente max periodeId, men den første hendelsen av den typen
+     * Dette då vi i noen tilfeller opphører en peride, som beholder den samme periodeId'n
+     */
     private fun gjeldendeForrigeOffsetForKjede(forrigeKjeder: List<Pair<Long, List<AndelData>>>): Map<IdentOgType, AndelData> {
         return forrigeKjeder.flatMap { it.second }
             .uten0beløp()
             .groupBy { IdentOgType(it.personIdent, it.type) }
-            .mapValues { it.value.maxBy { it.periodeId!! } }
+            .mapValues { it.value.sortedWith(compareByDescending<AndelData> { it.periodeId!! }.thenBy { it.id }).first() }
     }
 
     private fun oppdaterAndelerMedPeriodeId(

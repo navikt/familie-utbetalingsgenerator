@@ -161,3 +161,13 @@ Egenskap: Opphør
       | 1            | 04.2021  | 08.2021  |             | 700   | NY           | Nei        | 1          | 0                  |
       | 2            | 04.2021  | 08.2021  | 06.2021     | 700   | ENDR         | Ja         | 1          | 0                  |
       | 3            | 04.2021  | 08.2021  | 04.2021     | 700   | ENDR         | Ja         | 1          | 0                  |
+
+    Så forvent følgende andeler med periodeId
+      | BehandlingId | Id | Periode id | Forrige periode id | Kildebehandling |
+      | 1            | 0  | 0          |                    | 1               |
+      | 1            | 1  | 1          | 0                  | 1               |
+
+      | 2            | 2  | 0          |                    | 1               |
+      | 2            | 3  | 1          | 0                  | 1               |
+
+      | 3            | 4  | 0          |                    | 1               |

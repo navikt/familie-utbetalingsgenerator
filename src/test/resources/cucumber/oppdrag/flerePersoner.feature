@@ -59,6 +59,14 @@ Egenskap: Vedtak med flere identer
       # TODO kildebehandling på den første raden burde peke til den første behandlingen. EF gjør det samme her
       | 2            | 03.2021  | 04.2021  | 04.2021     | 700   | ENDR         | Ja         | 1          |                    | 2               |
 
+    Så forvent følgende andeler med periodeId
+      | BehandlingId | Id | Periode id | Forrige periode id | Kildebehandling |
+      | 1            | 0  | 0          |                    | 1               |
+      | 1            | 1  | 1          |                    | 1               |
+
+      | 2            | 2  | 0          |                    | 1               |
+      | 2            | 3  | 1          |                    | 1               |
+
   Scenario: Opphører ene personen, og forlenger den tredje
 
     Gitt følgende tilkjente ytelser
