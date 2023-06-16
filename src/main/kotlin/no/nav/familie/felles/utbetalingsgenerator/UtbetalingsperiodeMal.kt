@@ -54,6 +54,7 @@ internal data class UtbetalingsperiodeMal(
             satsType = Utbetalingsperiode.SatsType.MND,
             utbetalesTil = behandlingsinformasjon.utbetalesTil ?: behandlingsinformasjon.personIdent,
             behandlingId = behandlingsinformasjon.eksternBehandlingId,
+            utbetalingsgrad = andel.utbetalingsgrad,
         )
 
     private fun YearMonth.førsteDagIInneværendeMåned() = this.atDay(1)

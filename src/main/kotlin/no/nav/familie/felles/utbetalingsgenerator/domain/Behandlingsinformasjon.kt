@@ -22,4 +22,5 @@ data class Behandlingsinformasjon(
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
     val erGOmregning: Boolean = false,
+    val skalTaMedUtbetalingsgrad: Boolean = false
 )

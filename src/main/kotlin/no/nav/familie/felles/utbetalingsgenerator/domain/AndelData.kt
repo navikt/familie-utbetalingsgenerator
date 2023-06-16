@@ -2,6 +2,9 @@ package no.nav.familie.felles.utbetalingsgenerator.domain
 
 import java.time.YearMonth
 
+/**
+ * ID her burde ikke brukes til noe spesielt. EF har ikke et ID på andeler som sendes til utbetalingsgeneratorn
+ */
 data class AndelData(
     val id: String,
     val fom: YearMonth,
@@ -12,6 +15,7 @@ data class AndelData(
     val periodeId: Long?,
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: String?,
+    val utbetalingsgrad: Int?,
 )
 
 data class AndelDataLongId(
@@ -36,6 +40,7 @@ data class AndelDataLongId(
         periodeId = periodeId,
         forrigePeriodeId = forrigePeriodeId,
         kildeBehandlingId = kildeBehandlingId?.toString(),
+        utbetalingsgrad = null, // utbetalingsgrad er ikke i bruk av BA/KS
     )
 }
 
