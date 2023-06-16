@@ -131,7 +131,7 @@ internal object BeståendeAndelerBeregner {
     }
 
     private fun AndelData.erLik(other: AndelData): Boolean =
-        this.fom == other.tom &&
+        this.fom == other.fom &&
             this.tom == other.tom &&
             this.beløp == other.beløp
 }

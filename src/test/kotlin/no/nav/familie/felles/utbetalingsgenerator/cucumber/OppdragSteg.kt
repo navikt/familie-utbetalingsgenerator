@@ -188,7 +188,6 @@ class OppdragSteg {
         utbetalingsoppdrag: Utbetalingsoppdrag,
     ) {
         assertThat(utbetalingsoppdrag.kodeEndring).isEqualTo(forventetUtbetalingsoppdrag.kodeEndring)
-        assertThat(utbetalingsoppdrag.utbetalingsperiode).hasSize(forventetUtbetalingsoppdrag.utbetalingsperiode.size)
         forventetUtbetalingsoppdrag.utbetalingsperiode.forEachIndexed { index, forventetUtbetalingsperiode ->
             val utbetalingsperiode = utbetalingsoppdrag.utbetalingsperiode[index]
             try {
@@ -198,6 +197,7 @@ class OppdragSteg {
                 throw e
             }
         }
+        assertThat(utbetalingsoppdrag.utbetalingsperiode).hasSize(forventetUtbetalingsoppdrag.utbetalingsperiode.size)
     }
 }
 
