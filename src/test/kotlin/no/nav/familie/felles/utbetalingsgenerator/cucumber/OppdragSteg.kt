@@ -16,6 +16,7 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.Forvente
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser.mapAndeler
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLong
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseString
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriÅrMåned
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
@@ -104,10 +105,10 @@ class OppdragSteg {
             val beregnedeAndeler = beregnetUtbetalingsoppdrag.getValue(behandlingId).andeler
             val forventedeAndeler = rader.map { rad ->
                 AndelMedPeriodeId(
-                    id = parseLong(Domenebegrep.ID, rad),
+                    id = parseString(Domenebegrep.ID, rad),
                     periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
                     forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
-                    kildeBehandlingId = parseLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
+                    kildeBehandlingId = parseString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
                 )
             }
             assertThat(beregnedeAndeler).containsExactlyElementsOf(forventedeAndeler)
@@ -143,8 +144,9 @@ class OppdragSteg {
         opphørFra: YearMonth? = null,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
-        behandlingId = behandlingId,
-        fagsakId = 1L,
+        behandlingId = behandlingId.toString(),
+        eksternBehandlingId = behandlingId,
+        eksternFagsakId = 1L,
         fagsystem = Ytelsestype.BARNETRYGD,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),

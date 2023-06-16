@@ -13,8 +13,9 @@ import java.time.YearMonth
  */
 data class Behandlingsinformasjon(
     val saksbehandlerId: String,
-    val behandlingId: Long,
-    val fagsakId: Long,
+    val behandlingId: String,
+    val eksternBehandlingId: Long,
+    val eksternFagsakId: Long,
     val fagsystem: Ytelsestype,
     val personIdent: String,
     val vedtaksdato: LocalDate,

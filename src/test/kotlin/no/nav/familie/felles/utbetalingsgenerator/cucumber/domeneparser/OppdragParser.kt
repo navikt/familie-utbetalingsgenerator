@@ -38,13 +38,13 @@ object OppdragParser {
     ): AndelData {
         val ytelseType = parseValgfriEnum(DomenebegrepAndeler.YTELSE_TYPE, rad) ?: YtelseType.ORDINÆR_BARNETRYGD
         return AndelData(
-            id = andelId,
+            id = andelId.toString(),
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, rad),
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, rad),
             beløp = parseInt(DomenebegrepAndeler.BELØP, rad),
             personIdent = parseFødselsnummer(rad),
             type = ytelseType,
-            kildeBehandlingId = parseValgfriLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
+            kildeBehandlingId = parseValgfriString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
             periodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
             forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
         )

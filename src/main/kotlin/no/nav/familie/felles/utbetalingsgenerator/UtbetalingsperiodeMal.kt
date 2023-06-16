@@ -53,7 +53,7 @@ internal data class UtbetalingsperiodeMal(
             sats = BigDecimal(andel.beløp),
             satsType = Utbetalingsperiode.SatsType.MND,
             utbetalesTil = behandlingsinformasjon.utbetalesTil ?: behandlingsinformasjon.personIdent,
-            behandlingId = behandlingsinformasjon.behandlingId,
+            behandlingId = behandlingsinformasjon.eksternBehandlingId,
         )
 
     private fun YearMonth.førsteDagIInneværendeMåned() = this.atDay(1)

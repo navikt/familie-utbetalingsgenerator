@@ -3,9 +3,11 @@ package no.nav.familie.felles.utbetalingsgenerator
 import no.nav.familie.felles.utbetalingsgenerator.BeståendeAndelerBeregner.finnBeståendeAndeler
 import no.nav.familie.felles.utbetalingsgenerator.OppdragBeregnerUtil.validerAndeler
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
+import no.nav.familie.felles.utbetalingsgenerator.domain.AndelDataLongId
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelMedPeriodeId
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdrag
+import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdragLongId
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
@@ -49,6 +51,24 @@ class Utbetalingsgenerator {
         )
     }
 
+    fun lagUtbetalingsoppdrag(
+        behandlingsinformasjon: Behandlingsinformasjon,
+        nyeAndeler: List<AndelDataLongId>,
+        forrigeAndeler: List<AndelDataLongId>,
+        sisteAndelPerKjede: Map<IdentOgType, AndelDataLongId>,
+    ): BeregnetUtbetalingsoppdragLongId {
+        val beregnetUtbetalingsoppdrag = lagUtbetalingsoppdrag(
+            behandlingsinformasjon = behandlingsinformasjon,
+            nyeAndeler = nyeAndeler.map(AndelDataLongId::tilAndelData),
+            forrigeAndeler = forrigeAndeler.map(AndelDataLongId::tilAndelData),
+            sisteAndelPerKjede = sisteAndelPerKjede.mapValues { it.value.tilAndelData() },
+        )
+        return BeregnetUtbetalingsoppdragLongId(
+            utbetalingsoppdrag = beregnetUtbetalingsoppdrag.utbetalingsoppdrag,
+            andeler = beregnetUtbetalingsoppdrag.andeler.map(AndelMedPeriodeId::tilAndelMedPeriodeIdMedLongId),
+        )
+    }
+
     private fun lagUtbetalingsoppdrag(
         nyeAndeler: Map<IdentOgType, List<AndelData>>,
         forrigeKjeder: Map<IdentOgType, List<AndelData>>,
@@ -61,7 +81,7 @@ class Utbetalingsgenerator {
             saksbehandlerId = behandlingsinformasjon.saksbehandlerId,
             kodeEndring = kodeEndring(sisteAndelPerKjede),
             fagSystem = behandlingsinformasjon.fagsystem.kode,
-            saksnummer = behandlingsinformasjon.fagsakId.toString(),
+            saksnummer = behandlingsinformasjon.eksternFagsakId.toString(),
             aktoer = behandlingsinformasjon.personIdent,
             utbetalingsperiode = utbetalingsperioder(behandlingsinformasjon, nyeKjeder),
             gOmregning = behandlingsinformasjon.erGOmregning,
