@@ -64,6 +64,7 @@ class Utbetalingsgenerator {
             saksnummer = behandlingsinformasjon.fagsakId.toString(),
             aktoer = behandlingsinformasjon.personIdent,
             utbetalingsperiode = utbetalingsperioder(behandlingsinformasjon, nyeKjeder),
+            gOmregning = behandlingsinformasjon.erGOmregning,
         )
 
         return BeregnetUtbetalingsoppdrag(
