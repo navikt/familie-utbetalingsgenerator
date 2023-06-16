@@ -47,6 +47,7 @@ object OppdragParser {
             kildeBehandlingId = parseValgfriString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
             periodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
             forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
+            utbetalingsgrad = null,
         )
     }
 
