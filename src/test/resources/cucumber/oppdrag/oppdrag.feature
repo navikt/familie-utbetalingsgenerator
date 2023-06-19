@@ -104,6 +104,26 @@ Egenskap: Vedtak for førstegangsbehandling
       | 2            | 04.2021  | 06.2021  |             | 800   | ENDR         | Nei        | 1          | 0                  | 2               |
 
 
+  Scenario: Første perioden blir avkortet, og den andre er lik
+
+    Gitt følgende tilkjente ytelser
+      | BehandlingId | Fra dato | Til dato | Beløp |
+      | 1            | 03.2021  | 04.2021  | 700   |
+      | 1            | 05.2021  | 07.2021  | 700   |
+
+      | 2            | 03.2021  | 03.2021  | 700   |
+      | 2            | 05.2021  | 07.2021  | 700   |
+
+    Når beregner utbetalingsoppdrag
+
+    Så forvent følgende utbetalingsoppdrag
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Kildebehandling |
+      | 1            | 03.2021  | 04.2021  |             | 700   | NY           | Nei        | 0          |                    | 1               |
+      | 1            | 05.2021  | 07.2021  |             | 700   | NY           | Nei        | 1          | 0                  | 1               |
+
+      | 2            | 05.2021  | 07.2021  | 04.2021     | 700   | ENDR         | Ja         | 1          | 0                  | 2               |
+      | 2            | 05.2021  | 07.2021  |             | 700   | ENDR         | Nei        | 2          | 1                  | 2               |
+
   Scenario: Endrer beløp fra start
 
     Gitt følgende tilkjente ytelser
