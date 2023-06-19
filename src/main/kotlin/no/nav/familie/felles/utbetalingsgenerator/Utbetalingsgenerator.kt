@@ -100,8 +100,7 @@ class Utbetalingsgenerator {
         behandlingsinformasjon: Behandlingsinformasjon,
     ): List<ResultatForKjede> {
         val alleIdentOgTyper = nyeKjeder.keys + forrigeKjeder.keys
-        var sistePeriodeId = sisteAndelPerKjede.values.mapNotNull { it.periodeId }.maxOrNull()
-            ?: (behandlingsinformasjon.initPeriodeId - 1L)
+        var sistePeriodeId = sisteAndelPerKjede.values.mapNotNull { it.periodeId }.maxOrNull() ?: -1
         return alleIdentOgTyper.map { identOgType ->
             val forrigeAndeler = forrigeKjeder[identOgType] ?: emptyList()
             val nyeAndeler = nyeKjeder[identOgType] ?: emptyList()

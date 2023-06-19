@@ -16,22 +16,6 @@ Egenskap: Vedtak for førstegangsbehandling
       | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id |
       | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    |
 
-  Scenario: Revurderer en tidligere behandling, samtidig som man opphører lengre bak i tiden
-
-    Gitt følgende behandlingsinformasjon
-      | BehandlingId | Init periodeId |
-      | 1            | 1              |
-
-    Gitt følgende tilkjente ytelser
-      | BehandlingId | Fra dato | Til dato | Beløp |
-      | 1            | 03.2021  | 03.2021  | 700   |
-
-    Når beregner utbetalingsoppdrag
-
-    Så forvent følgende utbetalingsoppdrag
-      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id |
-      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 1          |                    |
-
 
   Scenario: Revurdering uten endring av andeler
 

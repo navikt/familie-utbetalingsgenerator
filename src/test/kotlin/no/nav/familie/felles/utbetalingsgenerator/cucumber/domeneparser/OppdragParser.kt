@@ -95,7 +95,6 @@ object OppdragParser {
 
 enum class DomenebegrepBehandlingsinformasjon(override val nøkkel: String) : Domenenøkkel {
     OPPHØR_FRA("Opphør fra"),
-    INIT_PERIODE_ID("Init periodeId"),
 }
 
 enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {
