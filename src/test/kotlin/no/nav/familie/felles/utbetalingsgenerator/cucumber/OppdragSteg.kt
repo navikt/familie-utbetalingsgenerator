@@ -17,6 +17,7 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragP
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser.mapAndeler
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseString
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriInt
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriÅrMåned
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
@@ -124,6 +125,7 @@ class OppdragSteg {
             behandlingsinformasjon[behandlingId] = lagBehandlingsinformasjon(
                 behandlingId = behandlingId,
                 opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
+                initPeriodeId = parseValgfriInt(DomenebegrepBehandlingsinformasjon.INIT_PERIODE_ID, rad) ?: 0,
             )
         }
     }
@@ -142,6 +144,7 @@ class OppdragSteg {
     private fun lagBehandlingsinformasjon(
         behandlingId: Long,
         opphørFra: YearMonth? = null,
+        initPeriodeId: Int = 0,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = behandlingId.toString(),
@@ -152,6 +155,8 @@ class OppdragSteg {
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,
         utbetalesTil = null,
+        erGOmregning = false,
+        initPeriodeId = initPeriodeId,
     )
 
     private fun beregnUtbetalingsoppdrag(

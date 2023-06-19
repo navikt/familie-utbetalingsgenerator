@@ -10,6 +10,7 @@ import java.time.YearMonth
  * @param utbetalesTil I tilfeller der eks mottaker er institusjon, så kan man sende med en annen ident som beløpet utbetales til
  *
  * @param erGOmregning er flagg for overgangsstønad som setter et flagg på utbetalingsoppdraget
+ * @param initPeriodeId pga at BA begynner på 0 og EF 1 så må EF sende med id som periodeId begynner på
  */
 data class Behandlingsinformasjon(
     val saksbehandlerId: String,
@@ -22,5 +23,12 @@ data class Behandlingsinformasjon(
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
     val erGOmregning: Boolean = false,
-    val skalTaMedUtbetalingsgrad: Boolean = false
-)
+    val initPeriodeId: Int = 0,
+) {
+
+    init {
+        if (initPeriodeId !in 0..1) {
+            error("initPeriodeId=$initPeriodeId må være 0 eller 1")
+        }
+    }
+}
