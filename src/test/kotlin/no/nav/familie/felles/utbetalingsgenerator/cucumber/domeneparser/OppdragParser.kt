@@ -5,6 +5,7 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.Domenepa
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
+import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
 import org.assertj.core.api.Assertions.assertThat
 import java.time.LocalDate
 
@@ -77,6 +78,8 @@ object OppdragParser {
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, it).atEndOfMonth(),
             opphør = parseValgfriÅrMåned(DomenebegrepUtbetalingsoppdrag.OPPHØRSDATO, it)?.atDay(1),
             kildebehandlingId = parseValgfriLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, it),
+            satstype = parseValgfriEnum<Utbetalingsperiode.SatsType>(DomenebegrepAndeler.SATSTYPE, it)
+                ?: Utbetalingsperiode.SatsType.MND,
         )
 
     private fun validerAlleKodeEndringerLike(rader: List<Map<String, String>>) {
@@ -95,6 +98,7 @@ object OppdragParser {
 
 enum class DomenebegrepBehandlingsinformasjon(override val nøkkel: String) : Domenenøkkel {
     OPPHØR_FRA("Opphør fra"),
+    YTELSE("Ytelse"),
 }
 
 enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {
@@ -103,6 +107,7 @@ enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {
     BELØP("Beløp"),
     KILDEBEHANDLING_ID("Kildebehandling"),
     IDENT("Ident"),
+    SATSTYPE("Satstype"),
 }
 
 enum class DomenebegrepUtbetalingsoppdrag(override val nøkkel: String) : Domenenøkkel {
@@ -131,4 +136,5 @@ data class ForventetUtbetalingsperiode(
     val tom: LocalDate,
     val opphør: LocalDate?,
     val kildebehandlingId: Long?,
+    val satstype: Utbetalingsperiode.SatsType,
 )

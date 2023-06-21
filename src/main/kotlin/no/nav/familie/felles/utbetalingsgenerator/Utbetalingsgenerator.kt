@@ -80,7 +80,7 @@ class Utbetalingsgenerator {
         val utbetalingsoppdrag = Utbetalingsoppdrag(
             saksbehandlerId = behandlingsinformasjon.saksbehandlerId,
             kodeEndring = kodeEndring(sisteAndelPerKjede),
-            fagSystem = behandlingsinformasjon.fagsystem.kode,
+            fagSystem = behandlingsinformasjon.ytelse.kode,
             saksnummer = behandlingsinformasjon.eksternFagsakId.toString(),
             aktoer = behandlingsinformasjon.personIdent,
             utbetalingsperiode = utbetalingsperioder(behandlingsinformasjon, nyeKjeder),

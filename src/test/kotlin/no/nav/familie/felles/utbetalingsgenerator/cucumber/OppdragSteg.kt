@@ -17,6 +17,7 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragP
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser.mapAndeler
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseString
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriEnum
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriÅrMåned
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
@@ -124,6 +125,7 @@ class OppdragSteg {
             behandlingsinformasjon[behandlingId] = lagBehandlingsinformasjon(
                 behandlingId = behandlingId,
                 opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
+                ytelse = parseValgfriEnum<Ytelsestype>(DomenebegrepBehandlingsinformasjon.YTELSE, rad),
             )
         }
     }
@@ -131,10 +133,7 @@ class OppdragSteg {
     private fun genererBehandlingsinformasjonForDeSomMangler(dataTable: DataTable) {
         dataTable.groupByBehandlingId().forEach { (behandlingId, _) ->
             if (!behandlingsinformasjon.containsKey(behandlingId)) {
-                behandlingsinformasjon.put(
-                    behandlingId,
-                    lagBehandlingsinformasjon(behandlingId),
-                )
+                behandlingsinformasjon[behandlingId] = lagBehandlingsinformasjon(behandlingId)
             }
         }
     }
@@ -142,12 +141,13 @@ class OppdragSteg {
     private fun lagBehandlingsinformasjon(
         behandlingId: Long,
         opphørFra: YearMonth? = null,
+        ytelse: Ytelsestype? = null
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = behandlingId.toString(),
         eksternBehandlingId = behandlingId,
         eksternFagsakId = 1L,
-        fagsystem = Ytelsestype.BARNETRYGD,
+        ytelse = ytelse ?: Ytelsestype.BARNETRYGD,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,
@@ -161,8 +161,9 @@ class OppdragSteg {
         val forrigeKjeder = acc.lastOrNull()?.second ?: emptyList()
         val behandlingId = andeler.key
         val sisteOffsetPerIdent = gjeldendeForrigeOffsetForKjede(acc)
+        val behandlingsinformasjon1 = behandlingsinformasjon.getValue(behandlingId)
         return utbetalingsgenerator.lagUtbetalingsoppdrag(
-            behandlingsinformasjon = behandlingsinformasjon.getValue(behandlingId),
+            behandlingsinformasjon = behandlingsinformasjon1,
             nyeAndeler = andeler.value,
             forrigeAndeler = forrigeKjeder,
             sisteAndelPerKjede = sisteOffsetPerIdent,
@@ -256,7 +257,7 @@ private fun assertUtbetalingsperiode(
         .isEqualTo(forventetUtbetalingsperiode.sats)
     assertThat(utbetalingsperiode.satsType)
         .`as`("satsType")
-        .isEqualTo(Utbetalingsperiode.SatsType.MND)
+        .isEqualTo(forventetUtbetalingsperiode.satstype)
     assertThat(utbetalingsperiode.vedtakdatoFom)
         .`as`("fom")
         .isEqualTo(forventetUtbetalingsperiode.fom)

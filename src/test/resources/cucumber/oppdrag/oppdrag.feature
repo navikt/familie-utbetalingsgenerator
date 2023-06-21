@@ -13,8 +13,8 @@ Egenskap: Vedtak for førstegangsbehandling
     Når beregner utbetalingsoppdrag
 
     Så forvent følgende utbetalingsoppdrag
-      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id |
-      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    |
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Satstype |
+      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    | MND      |
 
 
   Scenario: Revurdering uten endring av andeler
@@ -162,3 +162,19 @@ Egenskap: Vedtak for førstegangsbehandling
       | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    |
       | 2            | 03.2021  | 03.2021  | 03.2021     | 700   | ENDR         | Ja         | 0          |                    |
       | 3            | 03.2021  | 03.2021  |             | 700   | ENDR         | Nei        | 1          | 0                  |
+
+  Scenario: Skolepenger skal bruke engangsutbetaling
+
+    Gitt følgende behandlingsinformasjon
+      | BehandlingId | Ytelse      |
+      | 1            | SKOLEPENGER |
+
+    Gitt følgende tilkjente ytelser
+      | BehandlingId | Fra dato | Til dato | Beløp | Ytelse      |
+      | 1            | 03.2021  | 03.2021  | 700   | SKOLEPENGER |
+
+    Når beregner utbetalingsoppdrag
+
+    Så forvent følgende utbetalingsoppdrag
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Satstype | Ytelse |
+      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    | ENG      | SKOLEPENGER   |

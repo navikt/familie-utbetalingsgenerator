@@ -16,7 +16,7 @@ data class Behandlingsinformasjon(
     val behandlingId: String,
     val eksternBehandlingId: Long,
     val eksternFagsakId: Long,
-    val fagsystem: Ytelsestype,
+    val ytelse: Ytelsestype,
     val personIdent: String,
     val vedtaksdato: LocalDate,
     val opphørFra: YearMonth?,

@@ -47,8 +47,8 @@ data class AndelDataLongId(
 enum class YtelseType(val klassifisering: String) {
     ORDINÆR_BARNETRYGD("BATR"),
     UTVIDET_BARNETRYGD("BATR"),
-
     SMÅBARNSTILLEGG("BATRSMA"),
+
     OVERGANGSSTØNAD("EFOG"),
     BARNETILSYN("EFBT"),
     SKOLEPENGER("EFSP"),
