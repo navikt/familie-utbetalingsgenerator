@@ -4,6 +4,7 @@ import java.time.YearMonth
 
 /**
  * ID her burde ikke brukes til noe spesielt. EF har ikke et ID på andeler som sendes til utbetalingsgeneratorn
+ * @param utbetalingsgrad skal kun brukes for overgangsstønad
  */
 data class AndelData(
     val id: String,
@@ -15,7 +16,7 @@ data class AndelData(
     val periodeId: Long?,
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: String?,
-    val utbetalingsgrad: Int?,
+    val utbetalingsgrad: Int? = null,
 )
 
 data class AndelDataLongId(
