@@ -198,7 +198,7 @@ class Utbetalingsgenerator {
     ): Pair<List<AndelData>, Long> {
         var gjeldendePeriodeId = periodeId
         var forrigePeriodeId = sisteAndel?.periodeId
-        val nyeAndelerMedPeriodeId = nyeAndeler.mapIndexed { index, andelData ->
+        val nyeAndelerMedPeriodeId = nyeAndeler.map { andelData ->
             gjeldendePeriodeId += 1
             val nyAndel = andelData.copy(periodeId = gjeldendePeriodeId, forrigePeriodeId = forrigePeriodeId)
             forrigePeriodeId = gjeldendePeriodeId
