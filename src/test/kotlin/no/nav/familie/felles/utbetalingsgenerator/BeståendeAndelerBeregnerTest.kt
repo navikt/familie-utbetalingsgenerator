@@ -328,7 +328,7 @@ class BeståendeAndelerBeregnerTest {
             periodeId = periodeId,
             forrigePeriodeId = forrigePeriodeId,
             kildeBehandlingId = null,
-            utbetalingsgrad = null
+            utbetalingsgrad = null,
         )
     }
 }

@@ -141,7 +141,7 @@ class OppdragSteg {
     private fun lagBehandlingsinformasjon(
         behandlingId: Long,
         opphørFra: YearMonth? = null,
-        ytelse: Ytelsestype? = null
+        ytelse: Ytelsestype? = null,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = behandlingId.toString(),
@@ -178,7 +178,9 @@ class OppdragSteg {
         return forrigeKjeder.flatMap { it.second }
             .uten0beløp()
             .groupBy { IdentOgType(it.personIdent, it.type) }
-            .mapValues { it.value.sortedWith(compareByDescending<AndelData> { it.periodeId!! }.thenBy { it.id }).first() }
+            .mapValues {
+                it.value.sortedWith(compareByDescending<AndelData> { it.periodeId!! }.thenBy { it.id }).first()
+            }
     }
 
     private fun oppdaterAndelerMedPeriodeId(
