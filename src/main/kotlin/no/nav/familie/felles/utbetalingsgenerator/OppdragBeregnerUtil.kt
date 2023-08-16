@@ -2,6 +2,7 @@ package no.nav.familie.felles.utbetalingsgenerator
 
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
+import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
 import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 
@@ -11,6 +12,7 @@ internal object OppdragBeregnerUtil {
         behandlingsinformasjon: Behandlingsinformasjon,
         forrige: List<AndelData>,
         nye: List<AndelData>,
+        sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ) {
         val forrigeUtenNullbeløp = forrige.filter { it.beløp != 0 }
         val idn = forrigeUtenNullbeløp.map { it.id } + nye.map { it.id }
@@ -28,6 +30,13 @@ internal object OppdragBeregnerUtil {
             forrige.find { it.fom < opphørFra }
                 ?.let { error("Ugyldig opphørFra=$opphørFra som er etter andel=${it.id} sitt fom=${it.fom}") }
         }
+        if (sisteAndelPerKjede.isEmpty() && behandlingsinformasjon.opphørFra != null) {
+            error("Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere")
+        }
+        if (sisteAndelPerKjede.isEmpty() && forrige.isNotEmpty()) {
+            error("Mangler sisteAndelPerKjede når det finnes andeler fra før")
+        }
+
         validereTyperForYtelse(forrige, nye, behandlingsinformasjon)
     }
 
