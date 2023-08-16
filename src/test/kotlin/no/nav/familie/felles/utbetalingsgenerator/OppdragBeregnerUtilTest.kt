@@ -3,7 +3,9 @@ package no.nav.familie.felles.utbetalingsgenerator
 import no.nav.familie.felles.utbetalingsgenerator.OppdragBeregnerUtil.validerAndeler
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
+import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
+import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType.OVERGANGSSTØNAD
 import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
@@ -12,6 +14,11 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class OppdragBeregnerUtilTest {
+
+    private val tomSisteAndelPerKjede = emptyMap<IdentOgType, AndelData>()
+    private val sisteAndelPerKjede = mapOf(
+        IdentOgType("", OVERGANGSSTØNAD) to lagAndel(id = "1", periodeId = 1, kildeBehandlingId = "1")
+    )
 
     @Nested
     inner class HappyCase {
@@ -22,6 +29,7 @@ class OppdragBeregnerUtilTest {
                 lagBehandlingsinformasjon(),
                 forrige = listOf(),
                 nye = listOf(),
+                tomSisteAndelPerKjede,
             )
         }
 
@@ -31,6 +39,7 @@ class OppdragBeregnerUtilTest {
                 lagBehandlingsinformasjon(),
                 forrige = listOf(lagAndel(periodeId = 1, forrigePeriodeId = 0, kildeBehandlingId = "1")),
                 nye = listOf(),
+                sisteAndelPerKjede,
             )
         }
 
@@ -40,6 +49,7 @@ class OppdragBeregnerUtilTest {
                 lagBehandlingsinformasjon(),
                 forrige = listOf(),
                 nye = listOf(lagAndel()),
+                tomSisteAndelPerKjede,
             )
         }
     }
@@ -57,6 +67,7 @@ class OppdragBeregnerUtilTest {
                         lagAndel(id = "1", periodeId = 2, forrigePeriodeId = null, kildeBehandlingId = "1"),
                     ),
                     nye = listOf(),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Inneholder duplikat av id'er")
         }
@@ -68,6 +79,7 @@ class OppdragBeregnerUtilTest {
                     lagBehandlingsinformasjon(),
                     forrige = listOf(),
                     nye = listOf(lagAndel(id = "1"), lagAndel(id = "1")),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Inneholder duplikat av id'er")
         }
@@ -77,8 +89,16 @@ class OppdragBeregnerUtilTest {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(),
-                    forrige = listOf(lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")),
+                    forrige = listOf(
+                        lagAndel(
+                            id = "1",
+                            periodeId = 1,
+                            forrigePeriodeId = null,
+                            kildeBehandlingId = "1",
+                        ),
+                    ),
                     nye = listOf(lagAndel(id = "1")),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Inneholder duplikat av id'er")
         }
@@ -94,9 +114,25 @@ class OppdragBeregnerUtilTest {
                     lagBehandlingsinformasjon(),
                     forrige = listOf(lagAndel(periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "1")),
                     nye = listOf(),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("mangler periodeId")
         }
+
+        @Test
+        fun `kan ikke ha tom siste andel per kjede når forrige inneholder andeler`() {
+            assertThatThrownBy {
+                validerAndeler(
+                    lagBehandlingsinformasjon(),
+                    forrige = listOf(
+                        lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")
+                    ),
+                    nye = listOf(),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
+                )
+            }.hasMessageContaining("Mangler sisteAndelPerKjede når det finnes andeler fra før")
+        }
+
     }
 
     @Nested
@@ -109,6 +145,7 @@ class OppdragBeregnerUtilTest {
                     lagBehandlingsinformasjon(),
                     forrige = listOf(),
                     nye = listOf(lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("inneholder periodeId/forrigePeriodeId")
         }
@@ -120,6 +157,7 @@ class OppdragBeregnerUtilTest {
                     lagBehandlingsinformasjon(),
                     forrige = listOf(),
                     nye = listOf(lagAndel(id = "1", periodeId = null, forrigePeriodeId = 1, kildeBehandlingId = "1")),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("inneholder periodeId/forrigePeriodeId")
         }
@@ -129,11 +167,24 @@ class OppdragBeregnerUtilTest {
     inner class OpphørFra {
 
         @Test
+        fun `kan ikke sende inn opphørFra hvis det ikke finnes en kjede fra før`() {
+            assertThatThrownBy {
+                validerAndeler(
+                    lagBehandlingsinformasjon(opphørFra = YearMonth.now().minusMonths(1)),
+                    forrige = listOf(),
+                    nye = listOf(),
+                    tomSisteAndelPerKjede,
+                )
+            }.hasMessageContaining("Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere")
+        }
+
+        @Test
         fun `kan sende inn opphørFra som er før forrige første periode`() {
             validerAndeler(
                 lagBehandlingsinformasjon(opphørFra = YearMonth.now().minusMonths(1)),
                 forrige = listOf(lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")),
                 nye = listOf(),
+                sisteAndelPerKjede = sisteAndelPerKjede,
             )
         }
 
@@ -143,6 +194,7 @@ class OppdragBeregnerUtilTest {
                 lagBehandlingsinformasjon(opphørFra = YearMonth.now().minusMonths(1)),
                 forrige = listOf(),
                 nye = listOf(),
+                sisteAndelPerKjede = sisteAndelPerKjede,
             )
         }
 
@@ -151,8 +203,16 @@ class OppdragBeregnerUtilTest {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(opphørFra = YearMonth.now().plusMonths(1)),
-                    forrige = listOf(lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")),
+                    forrige = listOf(
+                        lagAndel(
+                            id = "1",
+                            periodeId = 1,
+                            forrigePeriodeId = null,
+                            kildeBehandlingId = "1",
+                        ),
+                    ),
                     nye = listOf(),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Ugyldig opphørFra")
         }
@@ -168,6 +228,7 @@ class OppdragBeregnerUtilTest {
                     lagBehandlingsinformasjon(Ytelsestype.OVERGANGSSTØNAD),
                     forrige = listOf(),
                     nye = listOf(lagAndel(ytelseType = YtelseType.SKOLEPENGER)),
+                    sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Forrige og nye typer inneholder typene")
         }
@@ -186,7 +247,7 @@ class OppdragBeregnerUtilTest {
         tom = YearMonth.now(),
         beløp = beløp,
         personIdent = "",
-        type = ytelseType ?: YtelseType.OVERGANGSSTØNAD,
+        type = ytelseType ?: OVERGANGSSTØNAD,
         periodeId = periodeId,
         forrigePeriodeId = forrigePeriodeId,
         kildeBehandlingId = kildeBehandlingId,

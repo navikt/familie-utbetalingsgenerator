@@ -13,9 +13,12 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag.KodeEndring
 import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
+import org.slf4j.LoggerFactory
 import java.time.YearMonth
 
 class Utbetalingsgenerator {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     /**
      * Generer utbetalingsoppdrag som sendes til oppdrag
@@ -39,7 +42,7 @@ class Utbetalingsgenerator {
         forrigeAndeler: List<AndelData>,
         sisteAndelPerKjede: Map<IdentOgType, AndelData>,
     ): BeregnetUtbetalingsoppdrag {
-        validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler)
+        validerAndeler(behandlingsinformasjon, forrigeAndeler, nyeAndeler, sisteAndelPerKjede)
         val nyeAndelerGruppert = nyeAndeler.groupByIdentOgType()
         val forrigeKjeder = forrigeAndeler.groupByIdentOgType()
 
@@ -105,7 +108,7 @@ class Utbetalingsgenerator {
             val forrigeAndeler = forrigeKjeder[identOgType] ?: emptyList()
             val nyeAndeler = nyeKjeder[identOgType] ?: emptyList()
             val sisteAndel = sisteAndelPerKjede[identOgType]
-            val opphørsdato = finnOpphørsdato(forrigeAndeler, nyeAndeler, behandlingsinformasjon)
+            val opphørsdato = finnOpphørsdato(forrigeAndeler, nyeAndeler, sisteAndel, behandlingsinformasjon)
 
             val nyKjede = beregnNyKjede(
                 forrigeAndeler.uten0beløp(),
@@ -122,12 +125,21 @@ class Utbetalingsgenerator {
     /**
      * Har tidligere valideret at opphørFra er <= andeler sitt fom
      * opphørFom opphører alle perioder, og kanskje lengre bak i tiden
+     *
+     * Hvis det ikke finnes en siste andel fra før, eks for BA som simulerer med en ny kjede,
+     * så skal man returnere null då man ikke skal opphøre noe fra før
      */
     private fun finnOpphørsdato(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
+        sisteAndel: AndelData?,
         behandlingsinformasjon: Behandlingsinformasjon,
-    ): YearMonth? = behandlingsinformasjon.opphørFra ?: finnOpphørsdatoPga0Beløp(forrigeAndeler, nyeAndeler)
+    ): YearMonth? {
+        if (sisteAndel == null) {
+            return null
+        }
+        return behandlingsinformasjon.opphørFra ?: finnOpphørsdatoPga0Beløp(forrigeAndeler, nyeAndeler)
+    }
 
     /**
      * For å unngå unøvendig 0-sjekk senere, så sjekkes det for om man
