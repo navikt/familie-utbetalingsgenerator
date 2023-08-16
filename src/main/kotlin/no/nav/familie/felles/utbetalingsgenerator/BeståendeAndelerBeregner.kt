@@ -46,7 +46,7 @@ internal object BeståendeAndelerBeregner {
         }
     }
 
-    fun finnBeståendeAndelerNårDetFinnesEndring(
+    private fun finnBeståendeAndelerNårDetFinnesEndring(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
         indexPåFørsteEndring: Int,
@@ -74,6 +74,13 @@ internal object BeståendeAndelerBeregner {
         return finnBeståendeAndelOgOpphør(ny, forrige, nyNeste)
     }
 
+    /**
+     * Finner ut hva man skal gjøre med de andeler der det er en diff
+     * Har først beregnet ut førsteIndexPåFørsteEndring, og sen plukket ut andelene for dette indeks
+     * @param ny andel for index for første endring
+     * @param forrige andel for index for første endring
+     * @param nyNeste andel for (index+1) før første endring, brukes for å finne ut som man skal opphøre eller skriver over med ny andel
+     */
     private fun finnBeståendeAndelOgOpphør(
         ny: AndelData?,
         forrige: AndelData,

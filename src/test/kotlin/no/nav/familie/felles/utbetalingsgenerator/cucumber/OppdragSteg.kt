@@ -112,7 +112,12 @@ class OppdragSteg {
                     kildeBehandlingId = parseString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
                 )
             }
-            assertThat(beregnedeAndeler).containsExactlyElementsOf(forventedeAndeler)
+            try {
+                assertThat(beregnedeAndeler).containsExactlyElementsOf(forventedeAndeler)
+            } catch (e: Throwable) {
+                logger.error("Feilet sjekk av behandling=$behandlingId")
+                throw e
+            }
         }
         assertThat(beregnetUtbetalingsoppdrag.values.map { it.andeler }.filter { it.isNotEmpty() })
             .hasSize(groupByBehandlingId.size)

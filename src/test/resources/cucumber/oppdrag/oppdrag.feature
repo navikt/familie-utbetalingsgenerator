@@ -87,7 +87,7 @@ Egenskap: Vedtak for førstegangsbehandling
       | 3            | 05.2021  | 05.2021  |             | 900   | ENDR         | Nei        | 2          | 1                  | 3               |
 
 
-  Scenario: Endrer beløp fra april
+  Scenario: Endrer beløp midt i en tidligere periode
 
     Gitt følgende tilkjente ytelser
       | BehandlingId | Fra dato | Til dato | Beløp |
@@ -102,6 +102,13 @@ Egenskap: Vedtak for førstegangsbehandling
       | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Kildebehandling |
       | 1            | 03.2021  | 06.2021  |             | 700   | NY           | Nei        | 0          |                    | 1               |
       | 2            | 04.2021  | 06.2021  |             | 800   | ENDR         | Nei        | 1          | 0                  | 2               |
+
+    Så forvent følgende andeler med periodeId
+      | BehandlingId | Id | Periode id | Forrige periode id | Kildebehandling |
+      | 1            | 0  | 0          |                    | 1               |
+
+      | 2            | 1  | 0          |                    | 1               |
+      | 2            | 2  | 1          | 0                  | 2               |
 
 
   Scenario: Første perioden blir avkortet, og den andre er lik
@@ -176,5 +183,6 @@ Egenskap: Vedtak for førstegangsbehandling
     Når beregner utbetalingsoppdrag
 
     Så forvent følgende utbetalingsoppdrag
-      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Satstype | Ytelse |
-      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    | ENG      | SKOLEPENGER   |
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id | Satstype | Ytelse      |
+      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    | ENG      | SKOLEPENGER |
+

@@ -21,5 +21,5 @@ data class Behandlingsinformasjon(
     val vedtaksdato: LocalDate,
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
-    val erGOmregning: Boolean = false,
+    val erGOmregning: Boolean = false, // Kan fjernes? Vi sender brev nå
 )
