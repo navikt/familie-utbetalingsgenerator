@@ -23,7 +23,7 @@
 
         <junit-jupiter.version>5.10.0</junit-jupiter.version>
         <assertj.version>3.24.2</assertj.version>
-        <cucumber.version>7.13.0</cucumber.version>
+        <cucumber.version>7.14.0</cucumber.version>
         <mockk.version>1.13.5</mockk.version>
         <junit-platform-suite.version>1.9.2</junit-platform-suite.version>
     </properties>
