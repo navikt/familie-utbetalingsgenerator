@@ -19,10 +19,9 @@ internal object BeståendeAndelerBeregner {
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
         opphørsdato: YearMonth?,
-        sisteAndel: AndelData?,
     ): BeståendeAndeler {
-        // Når det sendes med en opphørsdato beholder vi ingen andeler dersom det finnes en kjede fra forrige behandling
-        if (opphørsdato != null && sisteAndel != null) {
+        // Når det sendes med en opphørsdato beholder vi ingen andeler fra forrige behandling
+        if (opphørsdato != null) {
             return BeståendeAndeler(emptyList(), opphørsdato)
         }
 

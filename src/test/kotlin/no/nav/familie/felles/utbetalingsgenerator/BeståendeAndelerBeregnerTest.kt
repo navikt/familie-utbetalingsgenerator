@@ -22,7 +22,7 @@ class BeståendeAndelerBeregnerTest {
         val forrige = listOf(jan)
         val ny = listOf(lagAndel(JAN, JAN, 1))
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).containsExactly(jan)
@@ -36,7 +36,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(FEB, FEB, 1),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).containsExactlyElementsOf(forrige)
@@ -49,7 +49,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(JAN, JAN, 1),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -68,7 +68,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(MARS, MARS, 1),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).containsExactly(januar)
@@ -87,7 +87,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(MARS, MARS, 1),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(FEB)
         assertThat(beståendeAndeler.andeler).containsExactly(januar)
@@ -99,7 +99,7 @@ class BeståendeAndelerBeregnerTest {
         val forrige = listOf(januar, lagAndel(FEB, FEB, 1, periodeId = 1, forrigePeriodeId = 0))
         val ny = listOf(lagAndel(JAN, JAN, 1))
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(FEB)
         assertThat(beståendeAndeler.andeler).containsExactly(januar)
@@ -110,7 +110,7 @@ class BeståendeAndelerBeregnerTest {
         val forrige = listOf(lagAndel(JAN, FEB, 1, periodeId = 0))
         val ny = listOf(lagAndel(JAN, JAN, 1))
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(FEB)
         assertThat(beståendeAndeler.andeler)
@@ -122,7 +122,7 @@ class BeståendeAndelerBeregnerTest {
         val forrige = listOf(lagAndel(JAN, MAI, 1, periodeId = 0))
         val ny = listOf(lagAndel(JAN, FEB, 1))
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(MARS)
         assertThat(beståendeAndeler.andeler)
@@ -135,7 +135,7 @@ class BeståendeAndelerBeregnerTest {
         val forrige = listOf(lagAndel(JAN, JAN, 1, periodeId = 0))
         val ny = listOf(lagAndel(JAN, FEB, 1))
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -150,7 +150,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(JAN, FEB, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -165,7 +165,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(JAN, JAN, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -180,7 +180,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(JAN, FEB, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -196,7 +196,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(FEB, FEB, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler)
@@ -213,7 +213,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(APRIL, MAI, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -231,7 +231,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(MARS, APRIL, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler)
@@ -249,7 +249,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(MARS, APRIL, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(FEB)
         assertThat(beståendeAndeler.andeler)
@@ -267,7 +267,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(MARS, APRIL, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isNull()
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -283,7 +283,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(APRIL, MAI, 2),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(JAN)
         assertThat(beståendeAndeler.andeler).isEmpty()
@@ -300,7 +300,7 @@ class BeståendeAndelerBeregnerTest {
             lagAndel(FEB, FEB, 1),
         )
 
-        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null, null)
+        val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
         assertThat(beståendeAndeler.opphørFra).isEqualTo(MARS)
         assertThat(beståendeAndeler.andeler).containsExactly(

@@ -58,7 +58,7 @@ Egenskap: Sender med opphørFra
       | 1            | 03.2021  | 03.2021  | 700   |
 
     Når beregner utbetalingsoppdrag kjøres kastes exception
-      | Melding                               |
+      | Melding                                                                   |
       | Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere |
 
   Scenario: Kan ikke sende med opphørFra etter første fom på forrige andeler
@@ -75,4 +75,28 @@ Egenskap: Sender med opphørFra
     Når beregner utbetalingsoppdrag kjøres kastes exception
       | Melding            |
       | som er etter andel |
+
+
+  Scenario: Revurdering med opphør før første fom samtidig som opprettelse av ny kjede
+
+    Gitt følgende behandlingsinformasjon
+      | BehandlingId | Opphør fra |
+      | 2            | 01.2021    |
+
+    Gitt følgende tilkjente ytelser
+      | BehandlingId | Fra dato | Til dato | Beløp | Ident |
+      | 1            | 03.2021  | 03.2021  | 700   | 1     |
+
+      | 2            | 03.2021  | 03.2021  | 700   | 1     |
+      | 2            | 05.2021  | 05.2021  | 700   | 2     |
+
+    Når beregner utbetalingsoppdrag
+
+    Så forvent følgende utbetalingsoppdrag
+      | BehandlingId | Fra dato | Til dato | Opphørsdato | Beløp | Kode endring | Er endring | Periode id | Forrige periode id |
+      | 1            | 03.2021  | 03.2021  |             | 700   | NY           | Nei        | 0          |                    |
+
+      | 2            | 03.2021  | 03.2021  | 01.2021     | 700   | ENDR         | Ja         | 0          |                    |
+      | 2            | 03.2021  | 03.2021  |             | 700   | ENDR         | Nei        | 1          | 0                  |
+      | 2            | 05.2021  | 05.2021  |             | 700   | ENDR         | Nei        | 2          |                    |
 
