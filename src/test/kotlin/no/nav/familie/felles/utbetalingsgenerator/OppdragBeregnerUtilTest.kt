@@ -17,7 +17,7 @@ class OppdragBeregnerUtilTest {
 
     private val tomSisteAndelPerKjede = emptyMap<IdentOgType, AndelData>()
     private val sisteAndelPerKjede = mapOf(
-        IdentOgType("", OVERGANGSSTØNAD) to lagAndel(id = "1", periodeId = 1, kildeBehandlingId = "1")
+        IdentOgType("", OVERGANGSSTØNAD) to lagAndel(id = "1", periodeId = 1, kildeBehandlingId = "1"),
     )
 
     @Nested
@@ -125,7 +125,7 @@ class OppdragBeregnerUtilTest {
                 validerAndeler(
                     lagBehandlingsinformasjon(),
                     forrige = listOf(
-                        lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1")
+                        lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
                     ),
                     nye = listOf(),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
@@ -133,6 +133,17 @@ class OppdragBeregnerUtilTest {
             }.hasMessageContaining("Mangler sisteAndelPerKjede når det finnes andeler fra før")
         }
 
+        @Test
+        fun `kan ha tom siste andel per kjede når forrige kun inneholder 0-beløp andeler`() {
+            validerAndeler(
+                lagBehandlingsinformasjon(),
+                forrige = listOf(
+                    lagAndel(id = "1", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "1", beløp = 0),
+                ),
+                nye = listOf(),
+                sisteAndelPerKjede = tomSisteAndelPerKjede,
+            )
+        }
     }
 
     @Nested

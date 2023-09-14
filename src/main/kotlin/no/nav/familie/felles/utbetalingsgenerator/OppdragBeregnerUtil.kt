@@ -4,6 +4,7 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
+import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
 import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 
 internal object OppdragBeregnerUtil {
@@ -33,7 +34,7 @@ internal object OppdragBeregnerUtil {
         if (sisteAndelPerKjede.isEmpty() && behandlingsinformasjon.opphørFra != null) {
             error("Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere")
         }
-        if (sisteAndelPerKjede.isEmpty() && forrige.isNotEmpty()) {
+        if (sisteAndelPerKjede.isEmpty() && forrige.uten0beløp().isNotEmpty()) {
             error("Mangler sisteAndelPerKjede når det finnes andeler fra før")
         }
 
