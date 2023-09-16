@@ -1,6 +1,5 @@
 package no.nav.familie.felles.utbetalingsgenerator.domain
 
-import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -17,10 +16,15 @@ data class Behandlingsinformasjon(
     val behandlingId: String,
     val eksternBehandlingId: Long,
     val eksternFagsakId: Long,
-    val ytelse: Ytelsestype,
+    val fagsystem: Fagsystem,
     val personIdent: String,
     val vedtaksdato: LocalDate,
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
     val erGOmregning: Boolean = false, // Kan fjernes? Vi sender brev nå
 )
+
+interface Fagsystem {
+    val kode: String
+    val gyldigeSatstyper: Set<Ytelsestype>
+}

@@ -2,7 +2,7 @@ package no.nav.familie.felles.utbetalingsgenerator
 
 import no.nav.familie.felles.utbetalingsgenerator.BeståendeAndelerBeregner.finnBeståendeAndeler
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
-import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
+import no.nav.familie.felles.utbetalingsgenerator.domain.Ytelsestype
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.YearMonth
@@ -316,7 +316,7 @@ class BeståendeAndelerBeregnerTest {
         periodeId: Long? = null,
         forrigePeriodeId: Long? = null,
         ident: String = "12",
-        type: YtelseType = YtelseType.ORDINÆR_BARNETRYGD,
+        type: Ytelsestype = TestYtelsestype.ORDINÆR_BARNETRYGD,
     ): AndelData {
         return AndelData(
             id = "0",

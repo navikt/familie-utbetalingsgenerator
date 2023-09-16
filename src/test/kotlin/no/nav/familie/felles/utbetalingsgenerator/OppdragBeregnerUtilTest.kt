@@ -1,12 +1,12 @@
 package no.nav.familie.felles.utbetalingsgenerator
 
 import no.nav.familie.felles.utbetalingsgenerator.OppdragBeregnerUtil.validerAndeler
+import no.nav.familie.felles.utbetalingsgenerator.TestYtelsestype.OVERGANGSSTØNAD
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
+import no.nav.familie.felles.utbetalingsgenerator.domain.Fagsystem
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
-import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
-import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType.OVERGANGSSTØNAD
-import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
+import no.nav.familie.felles.utbetalingsgenerator.domain.Ytelsestype
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -236,9 +236,9 @@ class OppdragBeregnerUtilTest {
         fun `skal ikke kunne sende inn en andel av type skolepenger på ytelse overgangsstnad`() {
             assertThatThrownBy {
                 validerAndeler(
-                    lagBehandlingsinformasjon(Ytelsestype.OVERGANGSSTØNAD),
+                    lagBehandlingsinformasjon(TestFagsystem.OVERGANGSSTØNAD),
                     forrige = listOf(),
-                    nye = listOf(lagAndel(ytelseType = YtelseType.SKOLEPENGER)),
+                    nye = listOf(lagAndel(ytelsestype = TestYtelsestype.SKOLEPENGER)),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
             }.hasMessageContaining("Forrige og nye typer inneholder typene")
@@ -247,7 +247,7 @@ class OppdragBeregnerUtilTest {
 
     private fun lagAndel(
         id: String = "",
-        ytelseType: YtelseType? = null,
+        ytelsestype: Ytelsestype? = null,
         periodeId: Long? = null,
         forrigePeriodeId: Long? = null,
         kildeBehandlingId: String? = null,
@@ -258,7 +258,7 @@ class OppdragBeregnerUtilTest {
         tom = YearMonth.now(),
         beløp = beløp,
         personIdent = "",
-        type = ytelseType ?: OVERGANGSSTØNAD,
+        type = ytelsestype ?: OVERGANGSSTØNAD,
         periodeId = periodeId,
         forrigePeriodeId = forrigePeriodeId,
         kildeBehandlingId = kildeBehandlingId,
@@ -266,14 +266,14 @@ class OppdragBeregnerUtilTest {
     )
 
     private fun lagBehandlingsinformasjon(
-        ytelse: Ytelsestype = Ytelsestype.OVERGANGSSTØNAD,
+        fagsystem: Fagsystem = TestFagsystem.OVERGANGSSTØNAD,
         opphørFra: YearMonth? = null,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = "1",
         eksternBehandlingId = 1L,
         eksternFagsakId = 1L,
-        ytelse = ytelse,
+        fagsystem = fagsystem,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,

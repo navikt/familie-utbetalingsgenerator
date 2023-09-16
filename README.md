@@ -15,6 +15,26 @@ Bibliotek for å generere utbetalingsoppdrag mot økonomi
     * Behandling 2: jan - mars (denne avkorter den forrige, men beholder periodeId)
     * Behandling 3: jan - februar (denne avkorter den forrige, men beholder periodeId, og skal gjenbruke andelen fra behandling 1)
 
+####
+Fagsystem og Ytelsestype er interface som burde implementeres av en enum, eks
+```kotlin
+enum class YtelsestypeEF(
+    override val klassifisering: String,
+    override val satsType: SatsType = SatsType.MND,
+) : Ytelsestype {
+    OVERGANGSSTØNAD("EFOG"),
+    BARNETILSYN("EFBT"),
+    SKOLEPENGER("EFSP", SatsType.ENG),
+}
+
+enum class FagsystemEF(
+    override val kode: String,
+    override val gyldigeSatstyper: Set<Ytelsestype>,
+) : Fagsystem {
+    OVERGANGSSTØNAD("EFOG", setOf(TestYtelsestype.OVERGANGSSTØNAD)),
+}
+```
+
 #### Output
 * [BeregnetUtbetalingsoppdrag](src/main/kotlin/no/nav/familie/felles/utbetalingsgenerator/domain/BeregnetUtbetalingsoppdrag.kt)
   * Som inneholder utbetalingsoppdrag og andeler med periodeId/forrigePeriodeId/kildeBehandlingId hvis man trenger å oppdatere andeler i basen

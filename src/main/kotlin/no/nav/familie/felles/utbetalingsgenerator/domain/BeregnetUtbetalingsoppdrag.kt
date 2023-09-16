@@ -1,7 +1,5 @@
 package no.nav.familie.felles.utbetalingsgenerator.domain
 
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
-
 /**
  * @param andeler er alle andeler med nye periodeId/forrigePeriodeId for å kunne oppdatere lagrede andeler
  */
