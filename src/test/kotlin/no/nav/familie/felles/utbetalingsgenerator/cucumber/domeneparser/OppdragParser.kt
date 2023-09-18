@@ -99,6 +99,7 @@ object OppdragParser {
 enum class DomenebegrepBehandlingsinformasjon(override val nøkkel: String) : Domenenøkkel {
     OPPHØR_FRA("Opphør fra"),
     FAGSYSTEM("Fagsystem"),
+    OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING("Opphør kjeder fra første utbetaling"),
 }
 
 enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {

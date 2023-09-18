@@ -22,6 +22,7 @@ data class Behandlingsinformasjon(
     val opphørFra: YearMonth?,
     val utbetalesTil: String? = null,
     val erGOmregning: Boolean = false, // Kan fjernes? Vi sender brev nå
+    val opphørKjederFraFørsteUtbetaling: Boolean = false,
 )
 
 interface Fagsystem {

@@ -58,8 +58,8 @@ Egenskap: Sender med opphørFra
       | 1            | 03.2021  | 03.2021  | 700   |
 
     Når beregner utbetalingsoppdrag kjøres kastes exception
-      | Melding                               |
-      | Må ha siste andel for å kunne opphøre |
+      | Melding                                                                   |
+      | Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere |
 
   Scenario: Kan ikke sende med opphørFra etter første fom på forrige andeler
 

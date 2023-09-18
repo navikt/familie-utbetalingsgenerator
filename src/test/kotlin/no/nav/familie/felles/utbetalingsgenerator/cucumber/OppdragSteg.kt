@@ -18,6 +18,7 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragP
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.OppdragParser.mapAndeler
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseString
+import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriBoolean
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriEnum
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriLong
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseValgfriÅrMåned
@@ -132,6 +133,7 @@ class OppdragSteg {
                 behandlingId = behandlingId,
                 opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
                 fagsystem = parseValgfriEnum<TestFagsystem>(DomenebegrepBehandlingsinformasjon.FAGSYSTEM, rad),
+                opphørKjederFraFørsteUtbetaling = parseValgfriBoolean(DomenebegrepBehandlingsinformasjon.OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING, rad) ?: false,
             )
         }
     }
@@ -148,6 +150,7 @@ class OppdragSteg {
         behandlingId: Long,
         opphørFra: YearMonth? = null,
         fagsystem: Fagsystem? = null,
+        opphørKjederFraFørsteUtbetaling: Boolean = false,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = behandlingId.toString(),
@@ -158,6 +161,7 @@ class OppdragSteg {
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,
         utbetalesTil = null,
+        opphørKjederFraFørsteUtbetaling = opphørKjederFraFørsteUtbetaling,
     )
 
     private fun beregnUtbetalingsoppdrag(
