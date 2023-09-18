@@ -31,6 +31,9 @@ internal object OppdragBeregnerUtil {
             forrige.find { it.fom < opphørFra }
                 ?.let { error("Ugyldig opphørFra=$opphørFra som er etter andel=${it.id} sitt fom=${it.fom}") }
         }
+        if (behandlingsinformasjon.opphørKjederFraFørsteUtbetaling && behandlingsinformasjon.opphørFra != null) {
+            error("Kan ikke sette opphørKjederFraFørsteUtbetaling til true samtidig som opphørFra er satt")
+        }
         if (sisteAndelPerKjede.isEmpty() && behandlingsinformasjon.opphørFra != null) {
             error("Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere")
         }
