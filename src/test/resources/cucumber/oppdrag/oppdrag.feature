@@ -173,7 +173,7 @@ Egenskap: Vedtak for førstegangsbehandling
   Scenario: Skolepenger skal bruke engangsutbetaling
 
     Gitt følgende behandlingsinformasjon
-      | BehandlingId | Ytelse      |
+      | BehandlingId | Fagsystem   |
       | 1            | SKOLEPENGER |
 
     Gitt følgende tilkjente ytelser

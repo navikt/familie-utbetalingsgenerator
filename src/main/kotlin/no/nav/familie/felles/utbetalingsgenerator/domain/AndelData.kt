@@ -12,7 +12,7 @@ data class AndelData(
     val tom: YearMonth,
     val beløp: Int,
     val personIdent: String,
-    val type: YtelseType,
+    val type: Ytelsestype,
     val periodeId: Long?,
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: String?,
@@ -25,7 +25,7 @@ data class AndelDataLongId(
     val tom: YearMonth,
     val beløp: Int,
     val personIdent: String,
-    val type: YtelseType,
+    val type: Ytelsestype,
     val periodeId: Long?,
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: Long?,
@@ -45,14 +45,12 @@ data class AndelDataLongId(
     )
 }
 
-enum class YtelseType(val klassifisering: String) {
-    ORDINÆR_BARNETRYGD("BATR"),
-    UTVIDET_BARNETRYGD("BATR"),
-    SMÅBARNSTILLEGG("BATRSMA"),
-
-    OVERGANGSSTØNAD("EFOG"),
-    BARNETILSYN("EFBT"),
-    SKOLEPENGER("EFSP"),
+interface Ytelsestype {
+    val satsType: Utbetalingsperiode.SatsType
+    val klassifisering: String
 }
 
 internal fun List<AndelData>.uten0beløp(): List<AndelData> = this.filter { it.beløp != 0 }
+
+internal fun List<AndelData>.groupByIdentOgType(): Map<IdentOgType, List<AndelData>> =
+    groupBy { IdentOgType(it.personIdent, it.type) }.mapValues { it.value.sortedBy { it.fom } }

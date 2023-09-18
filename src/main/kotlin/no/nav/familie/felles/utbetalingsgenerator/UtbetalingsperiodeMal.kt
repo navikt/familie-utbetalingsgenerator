@@ -2,9 +2,8 @@ package no.nav.familie.felles.utbetalingsgenerator
 
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
-import no.nav.familie.kontrakter.felles.oppdrag.Opphør
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
-import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
+import no.nav.familie.felles.utbetalingsgenerator.domain.Opphør
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsperiode
 import java.math.BigDecimal
 import java.time.YearMonth
 
@@ -52,11 +51,7 @@ internal data class UtbetalingsperiodeMal(
             vedtakdatoFom = andel.fom.førsteDagIInneværendeMåned(),
             vedtakdatoTom = andel.tom.sisteDagIInneværendeMåned(),
             sats = BigDecimal(andel.beløp),
-            satsType = if (behandlingsinformasjon.ytelse == Ytelsestype.SKOLEPENGER) {
-                Utbetalingsperiode.SatsType.ENG
-            } else {
-                Utbetalingsperiode.SatsType.MND
-            },
+            satsType = andel.type.satsType,
             utbetalesTil = behandlingsinformasjon.utbetalesTil ?: behandlingsinformasjon.personIdent,
             behandlingId = behandlingsinformasjon.eksternBehandlingId,
             utbetalingsgrad = andel.utbetalingsgrad,

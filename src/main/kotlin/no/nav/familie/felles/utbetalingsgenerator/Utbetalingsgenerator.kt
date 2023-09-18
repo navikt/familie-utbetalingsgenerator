@@ -9,10 +9,11 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdrag
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdragLongId
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag.KodeEndring
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsperiode
+import no.nav.familie.felles.utbetalingsgenerator.domain.groupByIdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag.KodeEndring
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
 import org.slf4j.LoggerFactory
 import java.time.YearMonth
 
@@ -83,7 +84,7 @@ class Utbetalingsgenerator {
         val utbetalingsoppdrag = Utbetalingsoppdrag(
             saksbehandlerId = behandlingsinformasjon.saksbehandlerId,
             kodeEndring = kodeEndring(sisteAndelPerKjede),
-            fagSystem = behandlingsinformasjon.ytelse.kode,
+            fagSystem = behandlingsinformasjon.fagsystem.kode,
             saksnummer = behandlingsinformasjon.eksternFagsakId.toString(),
             aktoer = behandlingsinformasjon.personIdent,
             utbetalingsperiode = utbetalingsperioder(behandlingsinformasjon, nyeKjeder),
@@ -221,9 +222,6 @@ class Utbetalingsgenerator {
         }
         return Pair(nyeAndelerMedPeriodeId, gjeldendePeriodeId)
     }
-
-    private fun List<AndelData>.groupByIdentOgType(): Map<IdentOgType, List<AndelData>> =
-        groupBy { IdentOgType(it.personIdent, it.type) }.mapValues { it.value.sortedBy { it.fom } }
 
     private fun lagOpphørsperioder(
         behandlingsinformasjon: Behandlingsinformasjon,

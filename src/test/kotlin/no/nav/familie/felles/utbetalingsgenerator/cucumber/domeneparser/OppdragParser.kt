@@ -1,11 +1,11 @@
 package no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser
 
 import io.cucumber.datatable.DataTable
+import no.nav.familie.felles.utbetalingsgenerator.TestYtelsestype
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.DomeneparserUtil.groupByBehandlingId
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
-import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsperiode
 import org.assertj.core.api.Assertions.assertThat
 import java.time.LocalDate
 
@@ -37,7 +37,7 @@ object OppdragParser {
         rad: Map<String, String>,
         andelId: Long,
     ): AndelData {
-        val ytelseType = parseValgfriEnum(DomenebegrepAndeler.YTELSE_TYPE, rad) ?: YtelseType.ORDINÆR_BARNETRYGD
+        val ytelseType = parseValgfriEnum(DomenebegrepAndeler.YTELSE_TYPE, rad) ?: TestYtelsestype.ORDINÆR_BARNETRYGD
         return AndelData(
             id = andelId.toString(),
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, rad),
@@ -72,8 +72,8 @@ object OppdragParser {
             periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, it),
             forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, it),
             sats = parseInt(DomenebegrepUtbetalingsoppdrag.BELØP, it),
-            ytelse = parseValgfriEnum<YtelseType>(DomenebegrepUtbetalingsoppdrag.YTELSE_TYPE, it)
-                ?: YtelseType.ORDINÆR_BARNETRYGD,
+            ytelse = parseValgfriEnum<TestYtelsestype>(DomenebegrepUtbetalingsoppdrag.YTELSE_TYPE, it)
+                ?: TestYtelsestype.ORDINÆR_BARNETRYGD,
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, it).atDay(1),
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, it).atEndOfMonth(),
             opphør = parseValgfriÅrMåned(DomenebegrepUtbetalingsoppdrag.OPPHØRSDATO, it)?.atDay(1),
@@ -98,8 +98,8 @@ object OppdragParser {
 
 enum class DomenebegrepBehandlingsinformasjon(override val nøkkel: String) : Domenenøkkel {
     OPPHØR_FRA("Opphør fra"),
-    YTELSE("Ytelse"),
-    OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING("Opphør kjeder fra første utbetaling")
+    FAGSYSTEM("Fagsystem"),
+    OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING("Opphør kjeder fra første utbetaling"),
 }
 
 enum class DomenebegrepAndeler(override val nøkkel: String) : Domenenøkkel {
@@ -132,7 +132,7 @@ data class ForventetUtbetalingsperiode(
     val periodeId: Long,
     val forrigePeriodeId: Long?,
     val sats: Int,
-    val ytelse: YtelseType,
+    val ytelse: TestYtelsestype,
     val fom: LocalDate,
     val tom: LocalDate,
     val opphør: LocalDate?,

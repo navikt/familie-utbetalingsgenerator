@@ -4,6 +4,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java.no.Gitt
 import io.cucumber.java.no.Når
 import io.cucumber.java.no.Så
+import no.nav.familie.felles.utbetalingsgenerator.TestFagsystem
 import no.nav.familie.felles.utbetalingsgenerator.Utbetalingsgenerator
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.ValideringUtil.assertSjekkBehandlingIder
 import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.Domenebegrep
@@ -25,11 +26,11 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelMedPeriodeId
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdrag
+import no.nav.familie.felles.utbetalingsgenerator.domain.Fagsystem
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag
+import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsperiode
 import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsoppdrag
-import no.nav.familie.kontrakter.felles.oppdrag.Utbetalingsperiode
-import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.slf4j.LoggerFactory
@@ -131,7 +132,7 @@ class OppdragSteg {
             behandlingsinformasjon[behandlingId] = lagBehandlingsinformasjon(
                 behandlingId = behandlingId,
                 opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
-                ytelse = parseValgfriEnum<Ytelsestype>(DomenebegrepBehandlingsinformasjon.YTELSE, rad),
+                fagsystem = parseValgfriEnum<TestFagsystem>(DomenebegrepBehandlingsinformasjon.FAGSYSTEM, rad),
                 opphørKjederFraFørsteUtbetaling = parseValgfriBoolean(DomenebegrepBehandlingsinformasjon.OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING, rad) ?: false,
             )
         }
@@ -148,14 +149,14 @@ class OppdragSteg {
     private fun lagBehandlingsinformasjon(
         behandlingId: Long,
         opphørFra: YearMonth? = null,
-        ytelse: Ytelsestype? = null,
+        fagsystem: Fagsystem? = null,
         opphørKjederFraFørsteUtbetaling: Boolean = false,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = behandlingId.toString(),
         eksternBehandlingId = behandlingId,
         eksternFagsakId = 1L,
-        ytelse = ytelse ?: Ytelsestype.BARNETRYGD,
+        fagsystem = fagsystem ?: TestFagsystem.BARNETILSYN,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,
