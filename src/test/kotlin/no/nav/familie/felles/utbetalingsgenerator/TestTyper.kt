@@ -22,6 +22,7 @@ enum class TestFagsystem(
     override val gyldigeSatstyper: Set<Ytelsestype>,
 ) : Fagsystem {
     OVERGANGSSTØNAD("EFOG", setOf(TestYtelsestype.OVERGANGSSTØNAD)),
+    SKOLEPENGER("EFSP", setOf(TestYtelsestype.SKOLEPENGER)),
     BARNETILSYN(
         "BA",
         setOf(TestYtelsestype.ORDINÆR_BARNETRYGD, TestYtelsestype.UTVIDET_BARNETRYGD, TestYtelsestype.SMÅBARNSTILLEGG),

@@ -1,6 +1,7 @@
 package no.nav.familie.felles.utbetalingsgenerator
 
 import no.nav.familie.felles.utbetalingsgenerator.OppdragBeregnerUtil.validerAndeler
+import no.nav.familie.felles.utbetalingsgenerator.TestYtelsestype.ORDINÆR_BARNETRYGD
 import no.nav.familie.felles.utbetalingsgenerator.TestYtelsestype.OVERGANGSSTØNAD
 import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
