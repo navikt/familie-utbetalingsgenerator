@@ -5,6 +5,7 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import no.nav.familie.felles.utbetalingsgenerator.domain.Behandlingsinformasjon
 import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType
+import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType.ORDINÆR_BARNETRYGD
 import no.nav.familie.felles.utbetalingsgenerator.domain.YtelseType.OVERGANGSSTØNAD
 import no.nav.familie.kontrakter.felles.tilbakekreving.Ytelsestype
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -230,6 +231,40 @@ class OppdragBeregnerUtilTest {
     }
 
     @Nested
+    inner class OpphørKjederFraFørsteUtbetaling {
+
+        @Test
+        fun `kan ikke sette opphørKjederFraFørsteUtbetaling til true dersom opphørFra ikke er null`() {
+            assertThatThrownBy {
+                validerAndeler(
+                    lagBehandlingsinformasjon(opphørFra = YearMonth.now(), opphørKjederFraFørsteUtbetaling = true),
+                    forrige = listOf(
+                        lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                    ),
+                    nye = listOf(
+                        lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
+                    ),
+                    sisteAndelPerKjede = mapOf(IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null)),
+                )
+            }.hasMessageContaining("Kan ikke sette opphørKjederFraFørsteUtbetaling til true samtidig som opphørFra er satt")
+        }
+
+        @Test
+        fun `kan sette opphørKjederFraFørsteUtbetaling til true dersom opphørFra er null`() {
+            validerAndeler(
+                lagBehandlingsinformasjon(opphørFra = null, opphørKjederFraFørsteUtbetaling = true),
+                forrige = listOf(
+                    lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                ),
+                nye = listOf(
+                    lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
+                ),
+                sisteAndelPerKjede = mapOf(IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null)),
+            )
+        }
+    }
+
+    @Nested
     inner class Ytelsessjekk {
 
         @Test
@@ -268,6 +303,7 @@ class OppdragBeregnerUtilTest {
     private fun lagBehandlingsinformasjon(
         ytelse: Ytelsestype = Ytelsestype.OVERGANGSSTØNAD,
         opphørFra: YearMonth? = null,
+        opphørKjederFraFørsteUtbetaling: Boolean = false,
     ) = Behandlingsinformasjon(
         saksbehandlerId = "saksbehandlerId",
         behandlingId = "1",
@@ -278,5 +314,6 @@ class OppdragBeregnerUtilTest {
         vedtaksdato = LocalDate.now(),
         opphørFra = opphørFra,
         utbetalesTil = null,
+        opphørKjederFraFørsteUtbetaling = opphørKjederFraFørsteUtbetaling,
     )
 }
