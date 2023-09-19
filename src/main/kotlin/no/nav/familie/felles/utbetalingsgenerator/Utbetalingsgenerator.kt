@@ -140,7 +140,7 @@ class Utbetalingsgenerator {
             return null
         }
         if (behandlingsinformasjon.opphørKjederFraFørsteUtbetaling) {
-            return nyeAndeler.uten0beløp().minOf { it.fom }
+            return forrigeAndeler.uten0beløp().minOf { it.fom }
         }
         return behandlingsinformasjon.opphørFra ?: finnOpphørsdatoPga0Beløp(forrigeAndeler, nyeAndeler)
     }
