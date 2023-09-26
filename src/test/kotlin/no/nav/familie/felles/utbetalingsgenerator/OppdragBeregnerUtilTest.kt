@@ -312,7 +312,7 @@ class OppdragBeregnerUtilTest {
         fagsystem = fagsystem,
         personIdent = "1",
         vedtaksdato = LocalDate.now(),
-        opphørFra = opphørFra,
+        opphørAlleKjederFra = opphørFra,
         utbetalesTil = null,
         opphørKjederFraFørsteUtbetaling = opphørKjederFraFørsteUtbetaling,
     )

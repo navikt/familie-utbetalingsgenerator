@@ -25,14 +25,14 @@ internal object OppdragBeregnerUtil {
         nye.find { it.periodeId != null || it.forrigePeriodeId != null }
             ?.let { error("Ny andel=${it.id} inneholder periodeId/forrigePeriodeId") }
 
-        behandlingsinformasjon.opphørFra?.let { opphørFra ->
-            forrige.find { it.fom < opphørFra }
-                ?.let { error("Ugyldig opphørFra=$opphørFra som er etter andel=${it.id} sitt fom=${it.fom}") }
+        behandlingsinformasjon.opphørAlleKjederFra?.let { opphørAlleKjederFra ->
+            forrige.find { it.fom < opphørAlleKjederFra }
+                ?.let { error("Ugyldig opphørAlleKjederFra=$opphørAlleKjederFra som er etter andel=${it.id} sitt fom=${it.fom}") }
         }
-        if (behandlingsinformasjon.opphørKjederFraFørsteUtbetaling && behandlingsinformasjon.opphørFra != null) {
+        if (behandlingsinformasjon.opphørKjederFraFørsteUtbetaling && behandlingsinformasjon.opphørAlleKjederFra != null) {
             error("Kan ikke sette opphørKjederFraFørsteUtbetaling til true samtidig som opphørFra er satt")
         }
-        if (sisteAndelPerKjede.isEmpty() && behandlingsinformasjon.opphørFra != null) {
+        if (sisteAndelPerKjede.isEmpty() && behandlingsinformasjon.opphørAlleKjederFra != null) {
             error("Kan ikke sende med opphørFra når det ikke finnes noen kjede fra tidligere")
         }
         if (sisteAndelPerKjede.isEmpty() && forrige.uten0beløp().isNotEmpty()) {
