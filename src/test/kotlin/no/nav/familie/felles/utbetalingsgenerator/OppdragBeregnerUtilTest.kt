@@ -226,7 +226,7 @@ class OppdragBeregnerUtilTest {
                     nye = listOf(),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
-            }.hasMessageContaining("Ugyldig opphørFra")
+            }.hasMessageContaining("Ugyldig opphørAlleKjederFra")
         }
     }
 
