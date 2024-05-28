@@ -30,19 +30,19 @@ data class AndelDataLongId(
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: Long?,
 ) {
-
-    internal fun tilAndelData() = AndelData(
-        id = id.toString(),
-        fom = fom,
-        tom = tom,
-        beløp = beløp,
-        personIdent = personIdent,
-        type = type,
-        periodeId = periodeId,
-        forrigePeriodeId = forrigePeriodeId,
-        kildeBehandlingId = kildeBehandlingId?.toString(),
-        utbetalingsgrad = null, // utbetalingsgrad er ikke i bruk av BA/KS
-    )
+    internal fun tilAndelData() =
+        AndelData(
+            id = id.toString(),
+            fom = fom,
+            tom = tom,
+            beløp = beløp,
+            personIdent = personIdent,
+            type = type,
+            periodeId = periodeId,
+            forrigePeriodeId = forrigePeriodeId,
+            kildeBehandlingId = kildeBehandlingId?.toString(),
+            utbetalingsgrad = null, // utbetalingsgrad er ikke i bruk av BA/KS
+        )
 }
 
 interface Ytelsestype {

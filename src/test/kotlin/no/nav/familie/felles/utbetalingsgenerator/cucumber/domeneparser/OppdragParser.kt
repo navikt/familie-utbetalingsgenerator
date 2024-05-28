@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import java.time.LocalDate
 
 object OppdragParser {
-
     fun mapAndeler(dataTable: DataTable): Map<Long, List<AndelData>> {
         var index = 0L
         return dataTable.groupByBehandlingId().map { (behandlingId, rader) ->
@@ -52,9 +51,7 @@ object OppdragParser {
         )
     }
 
-    fun mapForventetUtbetalingsoppdrag(
-        dataTable: DataTable,
-    ): List<ForventetUtbetalingsoppdrag> {
+    fun mapForventetUtbetalingsoppdrag(dataTable: DataTable): List<ForventetUtbetalingsoppdrag> {
         return dataTable.groupByBehandlingId().map { (behandlingId, rader) ->
             val rad = rader.first()
             validerAlleKodeEndringerLike(rader)
@@ -72,14 +69,16 @@ object OppdragParser {
             periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, it),
             forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, it),
             sats = parseInt(DomenebegrepUtbetalingsoppdrag.BELØP, it),
-            ytelse = parseValgfriEnum<TestYtelsestype>(DomenebegrepUtbetalingsoppdrag.YTELSE_TYPE, it)
-                ?: TestYtelsestype.ORDINÆR_BARNETRYGD,
+            ytelse =
+                parseValgfriEnum<TestYtelsestype>(DomenebegrepUtbetalingsoppdrag.YTELSE_TYPE, it)
+                    ?: TestYtelsestype.ORDINÆR_BARNETRYGD,
             fom = parseÅrMåned(Domenebegrep.FRA_DATO, it).atDay(1),
             tom = parseÅrMåned(Domenebegrep.TIL_DATO, it).atEndOfMonth(),
             opphør = parseValgfriÅrMåned(DomenebegrepUtbetalingsoppdrag.OPPHØRSDATO, it)?.atDay(1),
             kildebehandlingId = parseValgfriLong(DomenebegrepAndeler.KILDEBEHANDLING_ID, it),
-            satstype = parseValgfriEnum<Utbetalingsperiode.SatsType>(DomenebegrepAndeler.SATSTYPE, it)
-                ?: Utbetalingsperiode.SatsType.MND,
+            satstype =
+                parseValgfriEnum<Utbetalingsperiode.SatsType>(DomenebegrepAndeler.SATSTYPE, it)
+                    ?: Utbetalingsperiode.SatsType.MND,
         )
 
     private fun validerAlleKodeEndringerLike(rader: List<Map<String, String>>) {

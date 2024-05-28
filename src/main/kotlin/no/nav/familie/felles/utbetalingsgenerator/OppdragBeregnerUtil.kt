@@ -6,7 +6,6 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.IdentOgType
 import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
 
 internal object OppdragBeregnerUtil {
-
     fun validerAndeler(
         behandlingsinformasjon: Behandlingsinformasjon,
         forrige: List<AndelData>,

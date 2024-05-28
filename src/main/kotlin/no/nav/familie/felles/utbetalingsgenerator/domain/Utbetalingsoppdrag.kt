@@ -15,7 +15,6 @@ data class Utbetalingsoppdrag(
     val utbetalingsperiode: List<Utbetalingsperiode>,
     val gOmregning: Boolean = false,
 ) {
-
     enum class KodeEndring {
         NY,
         ENDR,
@@ -39,7 +38,6 @@ data class Utbetalingsperiode(
     val behandlingId: Long,
     val utbetalingsgrad: Int? = null,
 ) {
-
     enum class SatsType {
         DAG,
         MND,

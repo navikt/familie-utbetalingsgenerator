@@ -18,7 +18,6 @@ internal data class UtbetalingsperiodeMal(
     val behandlingsinformasjon: Behandlingsinformasjon,
     val erEndringPåEksisterendePeriode: Boolean = false,
 ) {
-
     /**
      * Lager utbetalingsperioder som legges på utbetalingsoppdrag. En utbetalingsperiode tilsvarer linjer hos økonomi
      *
@@ -37,13 +36,15 @@ internal data class UtbetalingsperiodeMal(
     ): Utbetalingsperiode =
         Utbetalingsperiode(
             erEndringPåEksisterendePeriode = erEndringPåEksisterendePeriode,
-            opphør = if (erEndringPåEksisterendePeriode) {
-                val opphørDatoFom = opphørKjedeFom?.førsteDagIInneværendeMåned()
-                    ?: error("Mangler opphørsdato for kjede")
-                Opphør(opphørDatoFom)
-            } else {
-                null
-            },
+            opphør =
+                if (erEndringPåEksisterendePeriode) {
+                    val opphørDatoFom =
+                        opphørKjedeFom?.førsteDagIInneværendeMåned()
+                            ?: error("Mangler opphørsdato for kjede")
+                    Opphør(opphørDatoFom)
+                } else {
+                    null
+                },
             forrigePeriodeId = andel.forrigePeriodeId,
             periodeId = andel.periodeId ?: error("Mangler periodeId på andel=${andel.id}"),
             datoForVedtak = behandlingsinformasjon.vedtaksdato,
@@ -58,5 +59,6 @@ internal data class UtbetalingsperiodeMal(
         )
 
     private fun YearMonth.førsteDagIInneværendeMåned() = this.atDay(1)
+
     private fun YearMonth.sisteDagIInneværendeMåned() = this.atEndOfMonth()
 }
