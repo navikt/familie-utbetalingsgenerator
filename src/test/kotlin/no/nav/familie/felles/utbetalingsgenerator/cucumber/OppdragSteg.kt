@@ -38,7 +38,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class OppdragSteg {
-
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private val utbetalingsgenerator = Utbetalingsgenerator()
@@ -106,14 +105,15 @@ class OppdragSteg {
         val groupByBehandlingId = dataTable.groupByBehandlingId()
         groupByBehandlingId.forEach { (behandlingId, rader) ->
             val beregnedeAndeler = beregnetUtbetalingsoppdrag.getValue(behandlingId).andeler
-            val forventedeAndeler = rader.map { rad ->
-                AndelMedPeriodeId(
-                    id = parseString(Domenebegrep.ID, rad),
-                    periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
-                    forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
-                    kildeBehandlingId = parseString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
-                )
-            }
+            val forventedeAndeler =
+                rader.map { rad ->
+                    AndelMedPeriodeId(
+                        id = parseString(Domenebegrep.ID, rad),
+                        periodeId = parseLong(DomenebegrepUtbetalingsoppdrag.PERIODE_ID, rad),
+                        forrigePeriodeId = parseValgfriLong(DomenebegrepUtbetalingsoppdrag.FORRIGE_PERIODE_ID, rad),
+                        kildeBehandlingId = parseString(DomenebegrepAndeler.KILDEBEHANDLING_ID, rad),
+                    )
+                }
             try {
                 assertThat(beregnedeAndeler).containsExactlyElementsOf(forventedeAndeler)
             } catch (e: Throwable) {
@@ -129,12 +129,17 @@ class OppdragSteg {
         dataTable.groupByBehandlingId().map { (behandlingId, rader) ->
             val rad = rader.single()
 
-            behandlingsinformasjon[behandlingId] = lagBehandlingsinformasjon(
-                behandlingId = behandlingId,
-                opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
-                fagsystem = parseValgfriEnum<TestFagsystem>(DomenebegrepBehandlingsinformasjon.FAGSYSTEM, rad),
-                opphørKjederFraFørsteUtbetaling = parseValgfriBoolean(DomenebegrepBehandlingsinformasjon.OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING, rad) ?: false,
-            )
+            behandlingsinformasjon[behandlingId] =
+                lagBehandlingsinformasjon(
+                    behandlingId = behandlingId,
+                    opphørFra = parseValgfriÅrMåned(DomenebegrepBehandlingsinformasjon.OPPHØR_FRA, rad),
+                    fagsystem = parseValgfriEnum<TestFagsystem>(DomenebegrepBehandlingsinformasjon.FAGSYSTEM, rad),
+                    opphørKjederFraFørsteUtbetaling =
+                        parseValgfriBoolean(
+                            DomenebegrepBehandlingsinformasjon.OPPHØR_KJEDER_FRA_FØRSTE_UTBETALING,
+                            rad,
+                        ) ?: false,
+                )
         }
     }
 
@@ -219,8 +224,9 @@ class OppdragSteg {
         val forventedeUtbetalingsoppdrag = OppdragParser.mapForventetUtbetalingsoppdrag(dataTable)
         forventedeUtbetalingsoppdrag.forEach { forventetUtbetalingsoppdrag ->
             val behandlingId = forventetUtbetalingsoppdrag.behandlingId
-            val utbetalingsoppdrag = beregnetUtbetalingsoppdrag[behandlingId]
-                ?: error("Mangler utbetalingsoppdrag for $behandlingId")
+            val utbetalingsoppdrag =
+                beregnetUtbetalingsoppdrag[behandlingId]
+                    ?: error("Mangler utbetalingsoppdrag for $behandlingId")
             try {
                 assertUtbetalingsoppdrag(forventetUtbetalingsoppdrag, utbetalingsoppdrag.utbetalingsoppdrag)
             } catch (e: Throwable) {

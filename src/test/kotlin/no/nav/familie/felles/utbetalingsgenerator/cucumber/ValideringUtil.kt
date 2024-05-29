@@ -6,11 +6,14 @@ import no.nav.familie.felles.utbetalingsgenerator.cucumber.domeneparser.parseLon
 import no.nav.familie.felles.utbetalingsgenerator.domain.BeregnetUtbetalingsoppdrag
 
 object ValideringUtil {
-
-    fun assertSjekkBehandlingIder(dataTable: DataTable, utbetalingsoppdrag: MutableMap<Long, BeregnetUtbetalingsoppdrag>) {
-        val eksisterendeBehandlingId = utbetalingsoppdrag.filter {
-            it.value.utbetalingsoppdrag.utbetalingsperiode.isNotEmpty()
-        }.keys
+    fun assertSjekkBehandlingIder(
+        dataTable: DataTable,
+        utbetalingsoppdrag: MutableMap<Long, BeregnetUtbetalingsoppdrag>,
+    ) {
+        val eksisterendeBehandlingId =
+            utbetalingsoppdrag.filter {
+                it.value.utbetalingsoppdrag.utbetalingsperiode.isNotEmpty()
+            }.keys
         val forventedeBehandlingId = dataTable.asMaps().map { parseLong(Domenebegrep.BEHANDLING_ID, it) }.toSet()
         val ukontrollerteBehandlingId = eksisterendeBehandlingId.filterNot { forventedeBehandlingId.contains(it) }
         if (ukontrollerteBehandlingId.isNotEmpty()) {

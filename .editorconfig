@@ -1,2 +1,2 @@
 [*.{kt,kts}]
-#ktlint_experimental=enabled
+ktlint_function_naming_ignore_when_annotated_with = Gitt,Når,Så

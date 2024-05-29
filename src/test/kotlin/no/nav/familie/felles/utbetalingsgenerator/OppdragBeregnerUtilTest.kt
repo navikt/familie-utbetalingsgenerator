@@ -15,15 +15,14 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 class OppdragBeregnerUtilTest {
-
     private val tomSisteAndelPerKjede = emptyMap<IdentOgType, AndelData>()
-    private val sisteAndelPerKjede = mapOf(
-        IdentOgType("", OVERGANGSSTØNAD) to lagAndel(id = "1", periodeId = 1, kildeBehandlingId = "1"),
-    )
+    private val sisteAndelPerKjede =
+        mapOf(
+            IdentOgType("", OVERGANGSSTØNAD) to lagAndel(id = "1", periodeId = 1, kildeBehandlingId = "1"),
+        )
 
     @Nested
     inner class HappyCase {
-
         @Test
         fun `skal kunne sende inn tomme lister`() {
             validerAndeler(
@@ -57,16 +56,16 @@ class OppdragBeregnerUtilTest {
 
     @Nested
     inner class IdDuplikat {
-
         @Test
         fun `kan ikke inneholde duplikat av idn i forrige`() {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(),
-                    forrige = listOf(
-                        lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
-                        lagAndel(id = "1", periodeId = 2, forrigePeriodeId = null, kildeBehandlingId = "1"),
-                    ),
+                    forrige =
+                        listOf(
+                            lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                            lagAndel(id = "1", periodeId = 2, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                        ),
                     nye = listOf(),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
@@ -90,14 +89,15 @@ class OppdragBeregnerUtilTest {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(),
-                    forrige = listOf(
-                        lagAndel(
-                            id = "1",
-                            periodeId = 1,
-                            forrigePeriodeId = null,
-                            kildeBehandlingId = "1",
+                    forrige =
+                        listOf(
+                            lagAndel(
+                                id = "1",
+                                periodeId = 1,
+                                forrigePeriodeId = null,
+                                kildeBehandlingId = "1",
+                            ),
                         ),
-                    ),
                     nye = listOf(lagAndel(id = "1")),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
@@ -107,7 +107,6 @@ class OppdragBeregnerUtilTest {
 
     @Nested
     inner class ForrigeAndeler {
-
         @Test
         fun `forrige må inneholde periodeId`() {
             assertThatThrownBy {
@@ -125,9 +124,10 @@ class OppdragBeregnerUtilTest {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(),
-                    forrige = listOf(
-                        lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
-                    ),
+                    forrige =
+                        listOf(
+                            lagAndel(id = "1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                        ),
                     nye = listOf(),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
@@ -138,9 +138,10 @@ class OppdragBeregnerUtilTest {
         fun `kan ha tom siste andel per kjede når forrige kun inneholder 0-beløp andeler`() {
             validerAndeler(
                 lagBehandlingsinformasjon(),
-                forrige = listOf(
-                    lagAndel(id = "1", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "1", beløp = 0),
-                ),
+                forrige =
+                    listOf(
+                        lagAndel(id = "1", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "1", beløp = 0),
+                    ),
                 nye = listOf(),
                 sisteAndelPerKjede = tomSisteAndelPerKjede,
             )
@@ -149,7 +150,6 @@ class OppdragBeregnerUtilTest {
 
     @Nested
     inner class NyeAndeler {
-
         @Test
         fun `kan ikke inneholde periodeId`() {
             assertThatThrownBy {
@@ -177,7 +177,6 @@ class OppdragBeregnerUtilTest {
 
     @Nested
     inner class OpphørFra {
-
         @Test
         fun `kan ikke sende inn opphørFra hvis det ikke finnes en kjede fra før`() {
             assertThatThrownBy {
@@ -215,14 +214,15 @@ class OppdragBeregnerUtilTest {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(opphørFra = YearMonth.now().plusMonths(1)),
-                    forrige = listOf(
-                        lagAndel(
-                            id = "1",
-                            periodeId = 1,
-                            forrigePeriodeId = null,
-                            kildeBehandlingId = "1",
+                    forrige =
+                        listOf(
+                            lagAndel(
+                                id = "1",
+                                periodeId = 1,
+                                forrigePeriodeId = null,
+                                kildeBehandlingId = "1",
+                            ),
                         ),
-                    ),
                     nye = listOf(),
                     sisteAndelPerKjede = tomSisteAndelPerKjede,
                 )
@@ -232,19 +232,23 @@ class OppdragBeregnerUtilTest {
 
     @Nested
     inner class OpphørKjederFraFørsteUtbetaling {
-
         @Test
         fun `kan ikke sette opphørKjederFraFørsteUtbetaling til true dersom opphørFra ikke er null`() {
             assertThatThrownBy {
                 validerAndeler(
                     lagBehandlingsinformasjon(opphørFra = YearMonth.now(), opphørKjederFraFørsteUtbetaling = true),
-                    forrige = listOf(
-                        lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
-                    ),
-                    nye = listOf(
-                        lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
-                    ),
-                    sisteAndelPerKjede = mapOf(IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null)),
+                    forrige =
+                        listOf(
+                            lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                        ),
+                    nye =
+                        listOf(
+                            lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
+                        ),
+                    sisteAndelPerKjede =
+                        mapOf(
+                            IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null),
+                        ),
                 )
             }.hasMessageContaining("Kan ikke sette opphørKjederFraFørsteUtbetaling til true samtidig som opphørFra er satt")
         }
@@ -253,20 +257,24 @@ class OppdragBeregnerUtilTest {
         fun `kan sette opphørKjederFraFørsteUtbetaling til true dersom opphørFra er null`() {
             validerAndeler(
                 lagBehandlingsinformasjon(opphørFra = null, opphørKjederFraFørsteUtbetaling = true),
-                forrige = listOf(
-                    lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
-                ),
-                nye = listOf(
-                    lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
-                ),
-                sisteAndelPerKjede = mapOf(IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null)),
+                forrige =
+                    listOf(
+                        lagAndel("1", periodeId = 1, forrigePeriodeId = null, kildeBehandlingId = "1"),
+                    ),
+                nye =
+                    listOf(
+                        lagAndel("2", periodeId = null, forrigePeriodeId = null, kildeBehandlingId = "2"),
+                    ),
+                sisteAndelPerKjede =
+                    mapOf(
+                        IdentOgType("1", ORDINÆR_BARNETRYGD) to lagAndel("1", periodeId = 1, forrigePeriodeId = null),
+                    ),
             )
         }
     }
 
     @Nested
     inner class Ytelsessjekk {
-
         @Test
         fun `skal ikke kunne sende inn en andel av type skolepenger på ytelse overgangsstnad`() {
             assertThatThrownBy {

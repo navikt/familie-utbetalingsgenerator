@@ -10,31 +10,52 @@ val norskÅrMånedFormatter = DateTimeFormatter.ofPattern("MM.yyyy")
 val isoDatoFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 val isoÅrMånedFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
 
-fun parseDato(domenebegrep: Domenenøkkel, rad: Map<String, String>): LocalDate {
+fun parseDato(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): LocalDate {
     return parseDato(domenebegrep.nøkkel, rad)
 }
 
-fun parseValgfriDato(domenebegrep: Domenenøkkel, rad: Map<String, String?>): LocalDate? {
+fun parseValgfriDato(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String?>,
+): LocalDate? {
     return parseValgfriDato(domenebegrep.nøkkel, rad)
 }
 
-fun parseÅrMåned(domenebegrep: Domenenøkkel, rad: Map<String, String?>): YearMonth {
+fun parseÅrMåned(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String?>,
+): YearMonth {
     return parseValgfriÅrMåned(domenebegrep.nøkkel, rad)!!
 }
 
-fun parseValgfriÅrMåned(domenebegrep: Domenenøkkel, rad: Map<String, String?>): YearMonth? {
+fun parseValgfriÅrMåned(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String?>,
+): YearMonth? {
     return parseValgfriÅrMåned(domenebegrep.nøkkel, rad)
 }
 
-fun parseString(domenebegrep: Domenenøkkel, rad: Map<String, String>): String {
+fun parseString(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): String {
     return verdi(domenebegrep.nøkkel, rad)
 }
 
-fun parseValgfriString(domenebegrep: Domenenøkkel, rad: Map<String, String>): String? {
+fun parseValgfriString(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): String? {
     return valgfriVerdi(domenebegrep.nøkkel, rad)
 }
 
-fun parseBooleanMedBooleanVerdi(domenebegrep: Domenenøkkel, rad: Map<String, String>): Boolean {
+fun parseBooleanMedBooleanVerdi(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Boolean {
     val verdi = verdi(domenebegrep.nøkkel, rad)
 
     return when (verdi) {
@@ -43,14 +64,20 @@ fun parseBooleanMedBooleanVerdi(domenebegrep: Domenenøkkel, rad: Map<String, St
     }
 }
 
-fun parseBooleanJaIsTrue(domenebegrep: Domenenøkkel, rad: Map<String, String>): Boolean {
+fun parseBooleanJaIsTrue(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Boolean {
     return when (valgfriVerdi(domenebegrep.nøkkel, rad)) {
         "Ja" -> true
         else -> false
     }
 }
 
-fun parseBoolean(domenebegrep: Domenenøkkel, rad: Map<String, String>): Boolean {
+fun parseBoolean(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Boolean {
     val verdi = verdi(domenebegrep.nøkkel, rad)
 
     return when (verdi) {
@@ -66,7 +93,10 @@ fun parseBoolean(verdi: String): Boolean {
     }
 }
 
-fun parseValgfriBoolean(domenebegrep: Domenenøkkel, rad: Map<String, String?>): Boolean? {
+fun parseValgfriBoolean(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String?>,
+): Boolean? {
     val verdi = rad[domenebegrep.nøkkel]
     if (verdi == null || verdi == "") {
         return null
@@ -79,7 +109,10 @@ fun parseValgfriBoolean(domenebegrep: Domenenøkkel, rad: Map<String, String?>):
     }
 }
 
-fun parseDato(domenebegrep: String, rad: Map<String, String>): LocalDate {
+fun parseDato(
+    domenebegrep: String,
+    rad: Map<String, String>,
+): LocalDate {
     val dato = rad[domenebegrep]!!
 
     return parseDato(dato)
@@ -93,7 +126,10 @@ fun parseDato(dato: String): LocalDate {
     }
 }
 
-fun parseValgfriDato(domenebegrep: String, rad: Map<String, String?>): LocalDate? {
+fun parseValgfriDato(
+    domenebegrep: String,
+    rad: Map<String, String?>,
+): LocalDate? {
     val verdi = rad[domenebegrep]
     if (verdi == null || verdi == "") {
         return null
@@ -106,7 +142,10 @@ fun parseValgfriDato(domenebegrep: String, rad: Map<String, String?>): LocalDate
     }
 }
 
-fun parseValgfriÅrMåned(domenebegrep: String, rad: Map<String, String?>): YearMonth? {
+fun parseValgfriÅrMåned(
+    domenebegrep: String,
+    rad: Map<String, String?>,
+): YearMonth? {
     val verdi = rad[domenebegrep]
     if (verdi == null || verdi == "") {
         return null
@@ -123,20 +162,27 @@ fun parseÅrMåned(verdi: String): YearMonth {
     }
 }
 
-fun parseValgfriÅrMånedEllerDato(domenebegrep: Domenenøkkel, rad: Map<String, String?>): ÅrMånedEllerDato? {
+fun parseValgfriÅrMånedEllerDato(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String?>,
+): ÅrMånedEllerDato? {
     val verdi = rad[domenebegrep.nøkkel]
     if (verdi == null || verdi == "") {
         return null
     }
-    val dato = when (verdi.toList().count { it == '.' || it == '-' }) {
-        2 -> parseDato(verdi)
-        1 -> parseÅrMåned(verdi)
-        else -> error("Er datoet=$verdi riktigt formatert? Trenger å være på norskt eller iso-format")
-    }
+    val dato =
+        when (verdi.toList().count { it == '.' || it == '-' }) {
+            2 -> parseDato(verdi)
+            1 -> parseÅrMåned(verdi)
+            else -> error("Er datoet=$verdi riktigt formatert? Trenger å være på norskt eller iso-format")
+        }
     return ÅrMånedEllerDato(dato)
 }
 
-fun verdi(nøkkel: String, rad: Map<String, String>): String {
+fun verdi(
+    nøkkel: String,
+    rad: Map<String, String>,
+): String {
     val verdi = rad[nøkkel]
 
     if (verdi == null || verdi == "") {
@@ -146,54 +192,86 @@ fun verdi(nøkkel: String, rad: Map<String, String>): String {
     return verdi
 }
 
-fun valgfriVerdi(nøkkel: String, rad: Map<String, String>): String? {
+fun valgfriVerdi(
+    nøkkel: String,
+    rad: Map<String, String>,
+): String? {
     return rad[nøkkel]
 }
 
-fun parseInt(domenebegrep: Domenenøkkel, rad: Map<String, String>): Int {
+fun parseInt(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Int {
     val verdi = verdi(domenebegrep.nøkkel, rad).replace("_", "")
 
     return Integer.parseInt(verdi)
 }
 
-fun parseLong(domenebegrep: Domenenøkkel, rad: Map<String, String>): Long {
+fun parseLong(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Long {
     val verdi = verdi(domenebegrep.nøkkel, rad).replace("_", "")
 
     return verdi.toLong()
 }
 
-fun parseList(domenebegrep: Domenenøkkel, rad: Map<String, String>): List<Long> {
+fun parseList(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): List<Long> {
     return verdi(domenebegrep.nøkkel, rad).split(",").map { it.trim().toLong() }
 }
 
-fun parseStringList(domenebegrep: Domenenøkkel, rad: Map<String, String>): List<String> {
+fun parseStringList(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): List<String> {
     return verdi(domenebegrep.nøkkel, rad).split(",").map { it.trim() }
 }
 
-fun parseBigDecimal(domenebegrep: Domenenøkkel, rad: Map<String, String>): BigDecimal {
+fun parseBigDecimal(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): BigDecimal {
     val verdi = verdi(domenebegrep.nøkkel, rad)
     return verdi.toBigDecimal()
 }
 
-fun parseDouble(domenebegrep: Domenenøkkel, rad: Map<String, String>): Double {
+fun parseDouble(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Double {
     val verdi = verdi(domenebegrep.nøkkel, rad)
     return verdi.toDouble()
 }
 
-fun parseValgfriDouble(domenebegrep: Domenenøkkel, rad: Map<String, String>): Double? {
+fun parseValgfriDouble(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Double? {
     return valgfriVerdi(domenebegrep.nøkkel, rad)?.toDouble() ?: return null
 }
 
-fun parseValgfriLong(domenebegrep: Domenenøkkel, rad: Map<String, String>): Long? =
-    parseValgfriInt(domenebegrep, rad)?.toLong()
+fun parseValgfriLong(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Long? = parseValgfriInt(domenebegrep, rad)?.toLong()
 
-fun parseValgfriInt(domenebegrep: Domenenøkkel, rad: Map<String, String>): Int? {
+fun parseValgfriInt(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Int? {
     valgfriVerdi(domenebegrep.nøkkel, rad) ?: return null
 
     return parseInt(domenebegrep, rad)
 }
 
-fun parseValgfriIntRange(domenebegrep: Domenenøkkel, rad: Map<String, String>): Pair<Int, Int>? {
+fun parseValgfriIntRange(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): Pair<Int, Int>? {
     val verdi = valgfriVerdi(domenebegrep.nøkkel, rad) ?: return null
 
     return Pair(
@@ -202,16 +280,25 @@ fun parseValgfriIntRange(domenebegrep: Domenenøkkel, rad: Map<String, String>):
     )
 }
 
-inline fun <reified T : Enum<T>> parseValgfriEnum(domenebegrep: Domenenøkkel, rad: Map<String, String>): T? {
+inline fun <reified T : Enum<T>> parseValgfriEnum(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): T? {
     val verdi = valgfriVerdi(domenebegrep.nøkkel, rad) ?: return null
     return enumValueOf<T>(verdi.uppercase())
 }
 
-inline fun <reified T : Enum<T>> parseEnum(domenebegrep: Domenenøkkel, rad: Map<String, String>): T {
+inline fun <reified T : Enum<T>> parseEnum(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): T {
     return parseValgfriEnum<T>(domenebegrep, rad)!!
 }
 
-inline fun <reified T : Enum<T>> parseEnumListe(domenebegrep: Domenenøkkel, rad: Map<String, String>): List<T> {
+inline fun <reified T : Enum<T>> parseEnumListe(
+    domenebegrep: Domenenøkkel,
+    rad: Map<String, String>,
+): List<T> {
     val stringVerdier = valgfriVerdi(domenebegrep.nøkkel, rad)?.split(",")?.map { it.trim() } ?: return emptyList()
     return stringVerdier.map {
         enumValueOf<T>(it.uppercase())

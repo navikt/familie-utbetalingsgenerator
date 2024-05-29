@@ -7,7 +7,6 @@ import java.time.YearMonth
 import java.util.UUID
 
 class AndelDataTest {
-
     @Test
     fun `groupByIdentOgType skal gruppere ulike stønadstyper`() {
         val andel1 = andelData("1", TestYtelsestype.OVERGANGSSTØNAD)
@@ -26,7 +25,10 @@ class AndelDataTest {
             .containsExactly(andel4)
     }
 
-    private fun andelData(ident: String, type: TestYtelsestype) = AndelData(
+    private fun andelData(
+        ident: String,
+        type: TestYtelsestype,
+    ) = AndelData(
         id = UUID.randomUUID().toString(),
         fom = YearMonth.now(),
         tom = YearMonth.now(),

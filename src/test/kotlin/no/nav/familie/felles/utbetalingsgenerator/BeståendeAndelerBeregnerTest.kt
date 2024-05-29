@@ -31,10 +31,11 @@ class BeståendeAndelerBeregnerTest {
     @Test
     fun `en ny andel`() {
         val forrige = listOf(lagAndel(JAN, JAN, 1, periodeId = 0))
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(FEB, FEB, 1),
-        )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(FEB, FEB, 1),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -45,9 +46,10 @@ class BeståendeAndelerBeregnerTest {
     @Test
     fun `fra 0 til 1 andel`() {
         val forrige = listOf<AndelData>()
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-        )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -58,15 +60,17 @@ class BeståendeAndelerBeregnerTest {
     @Test
     fun `en ny andel mellom tidligere perioder`() {
         val januar = lagAndel(JAN, JAN, 1, periodeId = 0)
-        val forrige = listOf(
-            januar,
-            lagAndel(MARS, MARS, 1, periodeId = 1, forrigePeriodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(FEB, FEB, 1),
-            lagAndel(MARS, MARS, 1),
-        )
+        val forrige =
+            listOf(
+                januar,
+                lagAndel(MARS, MARS, 1, periodeId = 1, forrigePeriodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(FEB, FEB, 1),
+                lagAndel(MARS, MARS, 1),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -77,15 +81,17 @@ class BeståendeAndelerBeregnerTest {
     @Test
     fun `fjernet en andel mellom tidligere perioder`() {
         val januar = lagAndel(JAN, JAN, 1, periodeId = 0)
-        val forrige = listOf(
-            januar,
-            lagAndel(FEB, FEB, 1, periodeId = 1, forrigePeriodeId = 0),
-            lagAndel(MARS, MARS, 1, periodeId = 2, forrigePeriodeId = 1),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(MARS, MARS, 1),
-        )
+        val forrige =
+            listOf(
+                januar,
+                lagAndel(FEB, FEB, 1, periodeId = 1, forrigePeriodeId = 0),
+                lagAndel(MARS, MARS, 1, periodeId = 2, forrigePeriodeId = 1),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(MARS, MARS, 1),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -143,12 +149,14 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `nytt beløp for periode`() {
-        val forrige = listOf(
-            lagAndel(JAN, FEB, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, FEB, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, FEB, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, FEB, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -158,12 +166,14 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `avkortet periode og nytt beløp`() {
-        val forrige = listOf(
-            lagAndel(JAN, FEB, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, FEB, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -173,12 +183,14 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `forlenget periode og nytt beløp`() {
-        val forrige = listOf(
-            lagAndel(JAN, JAN, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, FEB, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, JAN, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, FEB, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -188,13 +200,15 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `nytt beløp fra feb`() {
-        val forrige = listOf(
-            lagAndel(JAN, FEB, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(FEB, FEB, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, FEB, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(FEB, FEB, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -205,13 +219,15 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `første andelen får tidligere fom, og en ny andel avkorter`() {
-        val forrige = listOf(
-            lagAndel(FEB, MAI, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, MARS, 1),
-            lagAndel(APRIL, MAI, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(FEB, MAI, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, MARS, 1),
+                lagAndel(APRIL, MAI, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -221,15 +237,17 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `får nytt beløp fra del av første perioden`() {
-        val forrige = listOf(
-            lagAndel(JAN, FEB, 1, periodeId = 0),
-            lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(FEB, FEB, 2),
-            lagAndel(MARS, APRIL, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, FEB, 1, periodeId = 0),
+                lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(FEB, FEB, 2),
+                lagAndel(MARS, APRIL, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -240,14 +258,16 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `avkorter den første perioden og beholden den andre`() {
-        val forrige = listOf(
-            lagAndel(JAN, FEB, 1, periodeId = 0),
-            lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(MARS, APRIL, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, FEB, 1, periodeId = 0),
+                lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(MARS, APRIL, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -258,14 +278,16 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `forlenger den første perioden og beholden den andre`() {
-        val forrige = listOf(
-            lagAndel(JAN, JAN, 1, periodeId = 0),
-            lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, FEB, 1),
-            lagAndel(MARS, APRIL, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, JAN, 1, periodeId = 0),
+                lagAndel(MARS, APRIL, 1, periodeId = 1, forrigePeriodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, FEB, 1),
+                lagAndel(MARS, APRIL, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -275,13 +297,15 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `første andelen får senere fom, og en ny andel avkorter`() {
-        val forrige = listOf(
-            lagAndel(JAN, MAI, 1, periodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(FEB, MARS, 1),
-            lagAndel(APRIL, MAI, 2),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, MAI, 1, periodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(FEB, MARS, 1),
+                lagAndel(APRIL, MAI, 2),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 
@@ -291,14 +315,16 @@ class BeståendeAndelerBeregnerTest {
 
     @Test
     fun `avkorter periode 2`() {
-        val forrige = listOf(
-            lagAndel(JAN, JAN, 1, periodeId = 0),
-            lagAndel(FEB, MARS, 1, periodeId = 1, forrigePeriodeId = 0),
-        )
-        val ny = listOf(
-            lagAndel(JAN, JAN, 1),
-            lagAndel(FEB, FEB, 1),
-        )
+        val forrige =
+            listOf(
+                lagAndel(JAN, JAN, 1, periodeId = 0),
+                lagAndel(FEB, MARS, 1, periodeId = 1, forrigePeriodeId = 0),
+            )
+        val ny =
+            listOf(
+                lagAndel(JAN, JAN, 1),
+                lagAndel(FEB, FEB, 1),
+            )
 
         val beståendeAndeler = finnBeståendeAndeler(forrige, ny, null)
 

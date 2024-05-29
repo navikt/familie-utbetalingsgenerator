@@ -4,8 +4,11 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.AndelData
 import java.time.YearMonth
 
 private sealed interface BeståendeAndelResultat
+
 private object NyAndelSkriverOver : BeståendeAndelResultat
+
 private class Opphørsdato(val opphør: YearMonth) : BeståendeAndelResultat
+
 private class AvkortAndel(val andel: AndelData, val opphør: YearMonth? = null) : BeståendeAndelResultat
 
 internal data class BeståendeAndeler(
@@ -14,7 +17,6 @@ internal data class BeståendeAndeler(
 )
 
 internal object BeståendeAndelerBeregner {
-
     fun finnBeståendeAndeler(
         forrigeAndeler: List<AndelData>,
         nyeAndeler: List<AndelData>,
@@ -96,11 +98,12 @@ internal object BeståendeAndelerBeregner {
             return NyAndelSkriverOver
         }
         if (forrige.tom > ny.tom) {
-            val opphørsdato = if (nyNeste == null || nyNeste.fom != ny.tom.plusMonths(1) || nyNeste.beløp == 0) {
-                ny.tom.plusMonths(1)
-            } else {
-                null
-            }
+            val opphørsdato =
+                if (nyNeste == null || nyNeste.fom != ny.tom.plusMonths(1) || nyNeste.beløp == 0) {
+                    ny.tom.plusMonths(1)
+                } else {
+                    null
+                }
             return AvkortAndel(forrige.copy(tom = ny.tom), opphørsdato)
         }
         return NyAndelSkriverOver
