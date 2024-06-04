@@ -17,11 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <java.version>17</java.version>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
 
         <junit-jupiter.version>5.10.2</junit-jupiter.version>
-        <assertj.version>3.25.3</assertj.version>
-        <cucumber.version>7.17.0</cucumber.version>
+        <assertj.version>3.26.0</assertj.version>
+        <cucumber.version>7.18.0</cucumber.version>
         <mockk.version>1.13.5</mockk.version>
         <junit-platform-suite.version>1.9.2</junit-platform-suite.version>
     </properties>
@@ -227,7 +227,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>enforce-banned-dependencies</id>
