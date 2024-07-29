@@ -14,5 +14,5 @@ jobs:
       - uses: actions/delete-package-versions@v5
         with:
           package-name: 'no.nav.familie.felles.familie-utbetalingsgenerator'
-          package-type: 'container'
+          package-type: 'package'
           min-versions-to-keep: 1
