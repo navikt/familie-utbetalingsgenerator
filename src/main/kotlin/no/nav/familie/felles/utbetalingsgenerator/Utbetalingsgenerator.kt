@@ -158,8 +158,10 @@ class Utbetalingsgenerator {
         val forrigeFørsteAndel = forrigeAndeler.firstOrNull()
         val nyFørsteAndel = nyeAndeler.firstOrNull()
         if (
-            forrigeFørsteAndel != null && nyFørsteAndel != null &&
-            nyFørsteAndel.beløp == 0 && nyFørsteAndel.fom < forrigeFørsteAndel.fom
+            forrigeFørsteAndel != null &&
+            nyFørsteAndel != null &&
+            nyFørsteAndel.beløp == 0 &&
+            nyFørsteAndel.fom < forrigeFørsteAndel.fom
         ) {
             return nyFørsteAndel.fom
         }

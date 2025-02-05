@@ -45,11 +45,11 @@ data class Utbetalingsperiode(
     }
 }
 
-data class Opphør(val opphørDatoFom: LocalDate)
+data class Opphør(
+    val opphørDatoFom: LocalDate,
+)
 
-fun Utbetalingsoppdrag.behandlingsIdForFørsteUtbetalingsperiode(): String {
-    return utbetalingsperiode[0].behandlingId.toString()
-}
+fun Utbetalingsoppdrag.behandlingsIdForFørsteUtbetalingsperiode(): String = utbetalingsperiode[0].behandlingId.toString()
 
 val Utbetalingsoppdrag.oppdragId
     get() = OppdragId(fagSystem, aktoer, behandlingsIdForFørsteUtbetalingsperiode())
