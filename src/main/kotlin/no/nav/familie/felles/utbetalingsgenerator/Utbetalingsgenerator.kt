@@ -106,7 +106,7 @@ class Utbetalingsgenerator {
     ): List<ResultatForKjede> {
         val alleIdentOgTyper = nyeKjeder.keys + forrigeKjeder.keys
         var sistePeriodeId = sisteAndelPerKjede.values.mapNotNull { it.periodeId }.maxOrNull() ?: -1
-        return alleIdentOgTyper.map { identOgType ->
+        return alleIdentOgTyper.sorted().map { identOgType ->
             val forrigeAndeler = forrigeKjeder[identOgType] ?: emptyList()
             val nyeAndeler = nyeKjeder[identOgType] ?: emptyList()
             val sisteAndel = sisteAndelPerKjede[identOgType]
@@ -158,8 +158,10 @@ class Utbetalingsgenerator {
         val forrigeFørsteAndel = forrigeAndeler.firstOrNull()
         val nyFørsteAndel = nyeAndeler.firstOrNull()
         if (
-            forrigeFørsteAndel != null && nyFørsteAndel != null &&
-            nyFørsteAndel.beløp == 0 && nyFørsteAndel.fom < forrigeFørsteAndel.fom
+            forrigeFørsteAndel != null &&
+            nyFørsteAndel != null &&
+            nyFørsteAndel.beløp == 0 &&
+            nyFørsteAndel.fom < forrigeFørsteAndel.fom
         ) {
             return nyFørsteAndel.fom
         }

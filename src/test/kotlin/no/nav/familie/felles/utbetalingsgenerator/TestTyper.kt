@@ -9,7 +9,7 @@ enum class TestYtelsestype(
     override val satsType: SatsType = SatsType.MND,
 ) : Ytelsestype {
     ORDINÆR_BARNETRYGD("BATR"),
-    UTVIDET_BARNETRYGD("BATR"),
+    UTVIDET_BARNETRYGD("BAUTV-OP"),
     SMÅBARNSTILLEGG("BATRSMA"),
 
     OVERGANGSSTØNAD("EFOG"),

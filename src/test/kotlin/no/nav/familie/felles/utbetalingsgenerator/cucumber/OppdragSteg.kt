@@ -56,7 +56,8 @@ class OppdragSteg {
         genererBehandlingsinformasjonForDeSomMangler(dataTable)
         andelerPerBehandlingId = mapAndeler(dataTable)
         if (
-            andelerPerBehandlingId.flatMap { it.value }
+            andelerPerBehandlingId
+                .flatMap { it.value }
                 .any { it.kildeBehandlingId != null || it.periodeId != null || it.forrigePeriodeId != null }
         ) {
             error("Kildebehandling/periodeId/forrigePeriodeId skal ikke settes på input, denne settes fra utbetalingsgeneratorn")
@@ -189,14 +190,14 @@ class OppdragSteg {
      * Når vi henter forrige offset for en kjede så må vi hente max periodeId, men den første hendelsen av den typen
      * Dette då vi i noen tilfeller opphører en peride, som beholder den samme periodeId'n
      */
-    private fun gjeldendeForrigeOffsetForKjede(forrigeKjeder: List<Pair<Long, List<AndelData>>>): Map<IdentOgType, AndelData> {
-        return forrigeKjeder.flatMap { it.second }
+    private fun gjeldendeForrigeOffsetForKjede(forrigeKjeder: List<Pair<Long, List<AndelData>>>): Map<IdentOgType, AndelData> =
+        forrigeKjeder
+            .flatMap { it.second }
             .uten0beløp()
             .groupBy { IdentOgType(it.personIdent, it.type) }
             .mapValues {
                 it.value.sortedWith(compareByDescending<AndelData> { it.periodeId!! }.thenBy { it.id }).first()
             }
-    }
 
     private fun oppdaterAndelerMedPeriodeId(
         beregnUtbetalingsoppdrag: BeregnetUtbetalingsoppdrag,
