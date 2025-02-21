@@ -19,13 +19,13 @@ data class AndelMedPeriodeId(
     val forrigePeriodeId: Long?,
     val kildeBehandlingId: String,
 ) {
-    constructor(andel: AndelData, nyttKildeBehandlingId: String? = null) :
+    constructor(andel: AndelData, nyKildeBehandlingId: String? = null) :
         this(
             id = andel.id,
             periodeId = andel.periodeId ?: error("Mangler offset på andel=${andel.id}"),
             forrigePeriodeId = andel.forrigePeriodeId,
             kildeBehandlingId =
-                nyttKildeBehandlingId ?: andel.kildeBehandlingId
+                nyKildeBehandlingId ?: andel.kildeBehandlingId
                     ?: error("Mangler kildebehandlingId på andel=${andel.id}"),
         )
 

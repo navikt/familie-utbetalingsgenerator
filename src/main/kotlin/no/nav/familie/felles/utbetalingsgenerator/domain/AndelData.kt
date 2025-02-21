@@ -19,6 +19,9 @@ data class AndelData(
     val utbetalingsgrad: Int? = null,
 )
 
+fun AndelData.representererSammePeriodeSom(andelData: AndelData): Boolean =
+    this.periodeId == andelData.periodeId && this.forrigePeriodeId == andelData.forrigePeriodeId && this.fom == andelData.fom
+
 data class AndelDataLongId(
     val id: Long,
     val fom: YearMonth,
