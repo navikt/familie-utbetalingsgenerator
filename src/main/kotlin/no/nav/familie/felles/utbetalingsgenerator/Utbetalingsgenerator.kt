@@ -183,23 +183,26 @@ class Utbetalingsgenerator {
         nyeKjeder: List<ResultatForKjede>,
     ): List<AndelMedPeriodeId> =
         nyeKjeder.flatMap { nyKjede ->
-            nyKjede.beståendeAndeler.map { beståendeAndel ->
-                AndelMedPeriodeId(
-                    andel = beståendeAndel,
-                    nyKildeBehandlingId =
-                        bestemKildeBehandlingIdForBeståendeAndel(
-                            beståendeAndel = beståendeAndel,
-                            opphørsandel = nyKjede.opphørsandel?.first,
-                            inneværendeBehandlingId = behandlingsinformasjon.behandlingId,
-                        ),
-                )
-            } +
+            val beståendeAndelerMedPeriodeId =
+                nyKjede.beståendeAndeler.map { beståendeAndel ->
+                    AndelMedPeriodeId(
+                        andel = beståendeAndel,
+                        nyKildeBehandlingId =
+                            bestemKildeBehandlingIdForBeståendeAndel(
+                                beståendeAndel = beståendeAndel,
+                                opphørsandel = nyKjede.opphørsandel?.first,
+                                inneværendeBehandlingId = behandlingsinformasjon.behandlingId,
+                            ),
+                    )
+                }
+            val nyeAndelerMedPeriodeId =
                 nyKjede.nyeAndeler.map { nyAndel ->
                     AndelMedPeriodeId(
                         andel = nyAndel,
                         nyKildeBehandlingId = behandlingsinformasjon.behandlingId,
                     )
                 }
+            beståendeAndelerMedPeriodeId + nyeAndelerMedPeriodeId
         }
 
     private fun bestemKildeBehandlingIdForBeståendeAndel(
