@@ -13,6 +13,7 @@ import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag
 import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsoppdrag.KodeEndring
 import no.nav.familie.felles.utbetalingsgenerator.domain.Utbetalingsperiode
 import no.nav.familie.felles.utbetalingsgenerator.domain.groupByIdentOgType
+import no.nav.familie.felles.utbetalingsgenerator.domain.representererSammePeriodeSom
 import no.nav.familie.felles.utbetalingsgenerator.domain.uten0beløp
 import org.slf4j.LoggerFactory
 import java.time.YearMonth
@@ -182,11 +183,41 @@ class Utbetalingsgenerator {
         nyeKjeder: List<ResultatForKjede>,
     ): List<AndelMedPeriodeId> =
         nyeKjeder.flatMap { nyKjede ->
-            nyKjede.beståendeAndeler.map { AndelMedPeriodeId(it) } +
-                nyKjede.nyeAndeler.map {
-                    AndelMedPeriodeId(it, behandlingsinformasjon.behandlingId)
+            val beståendeAndelerMedPeriodeId =
+                nyKjede.beståendeAndeler.map { beståendeAndel ->
+                    AndelMedPeriodeId(
+                        andel = beståendeAndel,
+                        nyKildeBehandlingId =
+                            bestemKildeBehandlingIdForBeståendeAndel(
+                                beståendeAndel = beståendeAndel,
+                                opphørsandel = nyKjede.opphørsandel?.first,
+                                inneværendeBehandlingId = behandlingsinformasjon.behandlingId,
+                            ),
+                    )
                 }
+            val nyeAndelerMedPeriodeId =
+                nyKjede.nyeAndeler.map { nyAndel ->
+                    AndelMedPeriodeId(
+                        andel = nyAndel,
+                        nyKildeBehandlingId = behandlingsinformasjon.behandlingId,
+                    )
+                }
+            beståendeAndelerMedPeriodeId + nyeAndelerMedPeriodeId
         }
+
+    private fun bestemKildeBehandlingIdForBeståendeAndel(
+        beståendeAndel: AndelData,
+        opphørsandel: AndelData?,
+        inneværendeBehandlingId: String,
+    ): String? {
+        val beståendeAndelErOpphørsandel = opphørsandel?.representererSammePeriodeSom(beståendeAndel) ?: false
+
+        return if (beståendeAndelErOpphørsandel) {
+            inneværendeBehandlingId
+        } else {
+            null
+        }
+    }
 
     // Hos økonomi skiller man på endring på oppdragsnivå 110 og på linjenivå 150 (periodenivå).
     // Da de har opplevd å motta

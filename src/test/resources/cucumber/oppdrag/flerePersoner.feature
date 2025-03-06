@@ -65,7 +65,7 @@ Egenskap: Vedtak med flere identer
       | 1            | 1  | 1          |                    | 1               |
 
       | 2            | 2  | 0          |                    | 1               |
-      | 2            | 3  | 1          |                    | 1               |
+      | 2            | 3  | 1          |                    | 2               |
 
   Scenario: Opphører ene personen, og forlenger den tredje
 
