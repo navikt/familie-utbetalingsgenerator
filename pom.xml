@@ -19,9 +19,9 @@
         <java.version>17</java.version>
         <kotlin.version>2.2.20</kotlin.version>
 
-        <junit-jupiter.version>5.13.4</junit-jupiter.version>
-        <assertj.version>3.27.5</assertj.version>
-        <cucumber.version>7.29.0</cucumber.version>
+        <junit-jupiter.version>6.0.0</junit-jupiter.version>
+        <assertj.version>3.27.6</assertj.version>
+        <cucumber.version>7.30.0</cucumber.version>
         <mockk.version>1.13.5</mockk.version>
         <junit-platform-suite.version>1.9.2</junit-platform-suite.version>
     </properties>
@@ -66,13 +66,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.5.18</version>
+            <version>1.5.19</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.18</version>
+            <version>1.5.19</version>
             <scope>test</scope>
         </dependency>
 
