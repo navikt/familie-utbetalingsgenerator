@@ -97,7 +97,7 @@ internal object BeståendeAndelerBeregner {
             }
             return NyAndelSkriverOver
         }
-        if (forrige.tom > ny.tom) {
+        if (ny.tom != null && (forrige.tom == null || forrige.tom > ny.tom)) {
             val opphørsdato =
                 if (nyNeste == null || nyNeste.fom != ny.tom.plusMonths(1) || nyNeste.beløp == 0) {
                     ny.tom.plusMonths(1)

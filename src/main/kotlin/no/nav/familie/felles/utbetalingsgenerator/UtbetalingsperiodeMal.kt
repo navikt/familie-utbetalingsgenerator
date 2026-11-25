@@ -50,7 +50,7 @@ internal data class UtbetalingsperiodeMal(
             datoForVedtak = behandlingsinformasjon.vedtaksdato,
             klassifisering = andel.type.klassifisering,
             vedtakdatoFom = andel.fom.førsteDagIInneværendeMåned(),
-            vedtakdatoTom = andel.tom.sisteDagIInneværendeMåned(),
+            vedtakdatoTom = andel.tom?.sisteDagIInneværendeMåned(),
             sats = BigDecimal(andel.beløp),
             satsType = andel.type.satsType,
             utbetalesTil = behandlingsinformasjon.utbetalesTil ?: behandlingsinformasjon.personIdent,
