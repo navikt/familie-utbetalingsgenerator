@@ -5,11 +5,12 @@ import java.time.YearMonth
 /**
  * ID her burde ikke brukes til noe spesielt. EF har ikke et ID på andeler som sendes til utbetalingsgeneratorn
  * @param utbetalingsgrad skal kun brukes for overgangsstønad
+ * @param tom null betyr at andelen løper uten sluttdato.
  */
 data class AndelData(
     val id: String,
     val fom: YearMonth,
-    val tom: YearMonth,
+    val tom: YearMonth?,
     val beløp: Int,
     val personIdent: String,
     val type: Ytelsestype,
@@ -22,10 +23,11 @@ data class AndelData(
 fun AndelData.representererSammePeriodeSom(andelData: AndelData): Boolean =
     this.periodeId == andelData.periodeId && this.forrigePeriodeId == andelData.forrigePeriodeId && this.fom == andelData.fom
 
+/** @param tom null betyr at andelen løper uten sluttdato. */
 data class AndelDataLongId(
     val id: Long,
     val fom: YearMonth,
-    val tom: YearMonth,
+    val tom: YearMonth?,
     val beløp: Int,
     val personIdent: String,
     val type: Ytelsestype,
